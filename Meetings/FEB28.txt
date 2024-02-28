@@ -1,0 +1,40 @@
+THIS WEEK ASSIGNMENTS:
+	RYAN: Sequence diagram, Activity diagram (Beta) (https://plantuml.com/activity-diagram-beta)
+
+
+NEXT WEEK: KOBRALOCKS
+	
+	MEETING FOR NEXT WEEK
+	
+	LOOK INTO LOGISTICS
+	
+	LANGUAGES
+		1) API: PYTHON
+		2) DATABASE: SQL/POSTGRESQL
+		3) WEB FRONT END: REACT
+		4) iOS: SWIFT
+		5) WHAT IS OUR ANDROID LANGUAGE
+			- IS THERE A CROSS PLAT LANGUAGE
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*2) POLOTICAL BALLET APP
+			- Accounts	
+			- Geolocation
+				- LOCATION SCOPE
+					- City
+					- County
+					- State
+					- Federal
+			- Conterversies, Local Forum
+		!! Cybersecurity Threat Detection and Response Software: As cyber threats evolve, businesses of all sizes need advanced protection. A software solution that uses machine learning to detect and respond to threats in real time could cater to this need. Offering it as a service (SaaS) could make it accessible to small and medium-sized enterprises (SMEs).
+		*/
