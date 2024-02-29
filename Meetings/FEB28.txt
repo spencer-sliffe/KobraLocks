@@ -16,17 +16,6 @@ NEXT WEEK: KOBRALOCKS
 		5) WHAT IS OUR ANDROID LANGUAGE
 			- IS THERE A CROSS PLAT LANGUAGE
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		/*2) POLOTICAL BALLET APP
 			- Accounts	
 			- Geolocation

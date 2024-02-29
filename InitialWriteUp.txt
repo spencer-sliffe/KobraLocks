@@ -1,5 +1,8 @@
+
+- Goal
+    - To build a system that analyzes sports statistics and builds profitable betting slips that are presented to clients with a user friendly interface.
 1. Project Planning and Requirements Analysis
-	Scope Definition: We need to clearly define the features and functionalities of "KobraLocks" as a team.
+	Scope Definition: We need to clearly define the features and functionalities of "KobraLocks".
 	Target Audience: Need to understand our user base to tailor the UX/UI accordingly.
 	Compliance and Legal Considerations: Since what we are doing involves betting, we need to adherence to legal regulations in targeted regions.
 	Architecture planning: We need to draw a Psuedocode UML at least that will show how the system works.
