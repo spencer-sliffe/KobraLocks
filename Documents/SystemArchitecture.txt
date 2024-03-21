@@ -1,0 +1,50 @@
+KobraLocks System Architecture Overview
+│
+├── Frontend/
+│   ├── Web (ReactJS)
+│   │   └── Communicates with Backend APIs for data
+│   │
+│   └── Mobile (React Native)
+│       └── Communicates with Backend APIs for data
+│
+├── Backend/
+│   ├── API Gateway
+│   │   └── Routes requests to appropriate backend services, providing a single entry point for the frontend
+│   │
+│   ├── User Service (Django/Flask)
+│   │   ├── Handles user authentication, preferences, and profile management
+│   │   ├── Interacts with PostgreSQL for user data
+│   │   └── Communicates with Frontend for user-related operations
+│   │
+│   ├── Betting Service (Django/Flask)
+│   │   ├── Manages bets, betting pools, and strategies
+│   │   ├── Interacts with PostgreSQL for structured betting data
+│   │   └── Uses Machine Learning models for predictive analytics, feeding insights back to the frontend
+│   │
+│   ├── Event Service (Django/Flask)
+│   │   ├── Handles sports events, teams, and player data
+│   │   ├── Interacts with both PostgreSQL for structured event data and MongoDB for real-time and historical event data
+│   │   └── Communicates with external APIs (e.g., Sportradar, Odds API) to fetch real-time data and updates
+│   │
+├── Machine Learning/
+│   ├── Trains predictive models based on historical data stored in MongoDB
+│   ├── Provides betting insights and predictions to the Betting Service
+│   └── Continuously updated with new data for model improvement
+│
+├── Database/
+│   ├── PostgreSQL
+│   │   ├── Stores structured data: user profiles, betting records, events, and transactions
+│   │   └── Interacts with Backend services for data retrieval and updates
+│   │
+│   └── MongoDB
+│       ├── Stores semi-structured or unstructured data: user activities, real-time event data, betting insights
+│       └── Interacts with Backend services, especially for real-time data processing and analytics
+│
+├── Third-party APIs/
+│   ├── Sportradar, Odds API, etc.
+│   │   └── Provide real-time sports data, event information, and betting odds
+│   │
+└── Cloud Infrastructure (AWS/Azure)
+    ├── Hosts all components of the system for scalability and reliability
+    ├── Manages load balancing, auto-scaling, and security
+    └── Provides services for data storage, computation, and machine learning model deployment
