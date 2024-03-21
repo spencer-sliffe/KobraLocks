@@ -1,4 +1,4 @@
-your_project_name/
+KobraLocks/
 │
 ├── README.md               # Project overview and setup instructions
 ├── .gitignore              # Specifies intentionally untracked files to ignore
