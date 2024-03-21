@@ -23,7 +23,7 @@ Backend Services:
 	Betting Service (Django/Flask):
 		Manage bets, betting pools, and strategies.
 		Interact with PostgreSQL and use ML models for predictive analytics.
-		Event Service (Django/Flask):
+	Event Service (Django/Flask):
 		Handle sports events, teams, and player data.
 		Interact with both PostgreSQL and MongoDB, and communicate with external APIs for real-time data.
 
