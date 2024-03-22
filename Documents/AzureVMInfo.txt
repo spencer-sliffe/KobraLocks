@@ -1,0 +1,28 @@
+Azure Virtual Machine Configuration for "KobraLocks"
+1. VM Size and Performance Requirements
+
+Backend Services (Django/Flask): Opt for VM sizes that provide a balance between compute capability and memory. Azure's B-series (B2s or B4ms) could be a starting point for development and testing, with the option to scale to D-series (D2s v3 or D4s v3) for production, offering a better CPU to memory ratio suitable for your Django/Flask applications.
+Machine Learning Models: For VMs that will handle machine learning workloads, consider the Azure's D-series or E-series (e.g., D8s v3 or E2s v3), which offer higher compute capabilities and more memory. These specifications are essential for processing and analyzing large datasets and running complex algorithms efficiently.
+2. Operating System
+
+Given your backend is in Python (Django/Flask), a Linux-based VM (e.g., Ubuntu 18.04 LTS) is recommended for its performance, security, and compatibility with open-source tools and libraries you'll likely use.
+3. High Availability and Scalability
+
+Availability Sets/Zones: Deploy VMs in pairs within availability sets or use availability zones in each Azure region to ensure high availability. This setup protects your application from datacenter-level failures.
+VM Scale Sets: Implement VM scale sets for backend and machine learning model servers to manage variable load. Azure automatically scales your VM instances up or down based on the defined rules (CPU usage, memory demand, etc.), ensuring your application remains responsive under different load conditions.
+4. Storage
+
+Managed Disks: Use Azure Managed Disks with your VMs. For backend services, standard SSDs (EBS) are sufficient. For machine learning models requiring faster read/write operations, premium SSDs (P30 or higher) may be necessary to support the I/O intensive workloads.
+5. Network and Security
+
+Virtual Network (VNet): Ensure each VM or VM scale set is associated with a VNet in the respective Azure region, facilitating secure communication within the infrastructure.
+Network Security Groups (NSGs): Configure NSGs to define inbound and outbound security rules. Limit access to only necessary ports (e.g., 80/443 for web traffic, 22 for SSH) and IP addresses to enhance security.
+Public IP Addresses: Assign public IP addresses to VMs only if direct Internet access is required. For internal services, communicate over private IP addresses within the VNet.
+6. Monitoring and Management
+
+Azure Monitor and Application Insights: Enable Azure Monitor and Application Insights for VMs to track performance, analyze application dependencies, and diagnose issues quickly.
+Deployment Process
+Azure Portal: Log in to the Azure Portal and navigate to "Virtual Machines" or "Virtual Machine Scale Sets" to begin the creation process.
+Resource Group Selection: Select the appropriate Resource Group based on the region (e.g., RG-CentralUS, RG-EastUS) for each deployment.
+VM Configuration: Follow the VM creation wizard, selecting the specifications and settings as outlined above. Include configuring the OS, disk options, networking settings, and security features.
+Scaling and Availability: For VM scale sets, define auto-scaling rules based on anticipated workload patterns.
