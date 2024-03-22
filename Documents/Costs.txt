@@ -1,0 +1,30 @@
+AZURE VIRTUAL MACHINES
+
+- COLLECTION US EAST 
+	- TOTAL COST (0.0832 USD/hr) *UPDATED MARCH 22 2024*
+		- Zone 02
+			- dev-backend-use-02
+					VM Size					B2s
+					Type					General Purpose
+					vCPUs					2
+					RAM (GiB)				4
+					Data disks				4
+					Max IOPS				1280
+					Local storage (GiB)		8(SCSI)
+					Premium disk			Supported
+					Cost/month				APPROX $30.37
+		- Zone 03
+			- dev-backend-use-03
+					VM Size					B2s
+					Type					General Purpose
+					vCPUs					2
+					RAM (GiB)				4
+					Data disks				4
+					Max IOPS				1280
+					Local storage (GiB)		8(SCSI)
+					Premium disk			Supported
+					Cost/month				APPROX $30.37		
+
+		
+		
+
