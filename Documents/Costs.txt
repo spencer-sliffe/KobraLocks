@@ -1,7 +1,7 @@
 AZURE VIRTUAL MACHINES
 
-- COLLECTION US EAST 
-	- TOTAL COST (0.0832 USD/hr) *UPDATED MARCH 22 2024*
+- COLLECTION US EAST (RG-KobraLocks-EastUS)
+	- TOTAL COST for Development VM's (0.0832 USD/hr) *UPDATED MARCH 22 2024*
 		- Zone 02
 			- dev-backend-use-02
 					VM Size					B2s
@@ -10,9 +10,9 @@ AZURE VIRTUAL MACHINES
 					RAM (GiB)				4
 					Data disks				4
 					Max IOPS				1280
-					Local storage (GiB)		8(SCSI)
-					Premium disk			Supported
-					Cost/month				APPROX $30.37
+					Local storage (GiB)			8(SCSI)
+					Premium disk				Supported
+					Cost/month							APPROX $30.37
 		- Zone 03
 			- dev-backend-use-03
 					VM Size					B2s
@@ -21,9 +21,20 @@ AZURE VIRTUAL MACHINES
 					RAM (GiB)				4
 					Data disks				4
 					Max IOPS				1280
-					Local storage (GiB)		8(SCSI)
-					Premium disk			Supported
-					Cost/month				APPROX $30.37		
+					Local storage (GiB)			8(SCSI)
+					Premium disk				Supported
+					Cost/month							APPROX $30.37		
+
+	- 	Compute Sku
+		-	USD 12.41/month
+		-	Free upto 750 hours
+		-	Standard_B1ms (1 vCore) 							$12.41
+	-	Storage
+		-	USD 3.68/month
+		-	Free upto 32 GB									32 
+		-	Storage selected 32 GiB (USD 0.12 per GiB)					x 0.12
+	-	Bandwidth
+		-	Estimated total									USD 16.09/month
 
 		
 		

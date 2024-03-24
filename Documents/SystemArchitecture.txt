@@ -21,11 +21,11 @@ KobraLocks System Architecture Overview
 │   │   ├── Interacts with PostgreSQL for structured betting data
 │   │   └── Uses Machine Learning models for predictive analytics, feeding insights back to the frontend
 │   │
-│   ├── Event Service (Django/Flask)
-│   │   ├── Handles sports events, teams, and player data
-│   │   ├── Interacts with both PostgreSQL for structured event data and MongoDB for real-time and historical event data
-│   │   └── Communicates with external APIs (e.g., Sportradar, Odds API) to fetch real-time data and updates
-│   │
+│   └── Event Service (Django/Flask)
+│       ├── Handles sports events, teams, and player data
+│       ├── Interacts with both PostgreSQL for structured event data and MongoDB for real-time and historical event data
+│       └── Communicates with external APIs (e.g., Sportradar, Odds API) to fetch real-time data and updates
+│   
 ├── Machine Learning/
 │   ├── Trains predictive models based on historical data stored in MongoDB
 │   ├── Provides betting insights and predictions to the Betting Service
@@ -41,9 +41,9 @@ KobraLocks System Architecture Overview
 │       └── Interacts with Backend services, especially for real-time data processing and analytics
 │
 ├── Third-party APIs/
-│   ├── Sportradar, Odds API, etc.
-│   │   └── Provide real-time sports data, event information, and betting odds
-│   │
+│   └── Sportradar, Odds API, etc.
+│       └── Provide real-time sports data, event information, and betting odds
+│   
 └── Cloud Infrastructure (AWS/Azure)
     ├── Hosts all components of the system for scalability and reliability
     ├── Manages load balancing, auto-scaling, and security
