@@ -7,9 +7,9 @@
 	Architecture planning: We need to draw a Psuedocode UML at least that will show how the system works.
 2. Architecture Design
 	Front-End: Separate development/languages for Android (Kotlin/Java), iOS (Swift), and Web (ReactJS/Angular/VueJS).
-	Back-End: Python with frameworks like Django or Flask.
-	Database: SQL for structured data storage; NoSQL (like MongoDB) for unstructured data.
-	APIs: Real-time sports statistics we can use Sportradar, !!PANDASCORE!!, Odds API, etc...
+	Back-End: Python with Django.
+	Database: SQL for structured data storage; NoSQL (MongoDB) for unstructured data.
+	APIs: Real-time sports statistics we can use Sportradar, PANDASCORE, Odds API, etc...
 3. Machine Learning and Data Processing
 	Data Collection: Real-time and historical sports data using our APIs forementioned.
 	Machine Learning: Python libraries scikit-learn, TensorFlow, and PyTorch can be used for predictive modeling.
@@ -26,7 +26,7 @@
 	Unit Testing: For individual components like web, android, iOS.
 	Integration Testing: Need to make sure everything works together seamlessly before releasing.
 	Deployment: Cloud platforms like AWS or Azure for scalability and reliability.
-				*I would like to use Azure because I know it is reliable*
+			*I would like to use Azure because I know it is reliable*
 7. Continuous Improvement and Support
 	User Feedback: Incorporate user feedback for improvements.
 	Updates: Regular updates for new features, security, and performance enhancements.
@@ -38,8 +38,9 @@
 	Monetization Strategy: A subscription model or in-app purchases
 	Community Building: Bet with and against other friends. Share winnings/take losings
 10. Technical Stack 
+	Cloud Platform: Azure
 	Front-End: React Native (for cross-platform mobile development), ReactJS (Web).
-	Back-End: Python (Django/Flask).
+	Back-End: Python (Django).
 	Database: PostgreSQL (SQL), MongoDB (NoSQL).
 	Machine Learning: TensorFlow, scikit-learn.
-	APIs: Sportradar, Odds API, or other sports data providers.
+	APIs: Sportradar, Odds API, PandaScore or other sports data providers.
