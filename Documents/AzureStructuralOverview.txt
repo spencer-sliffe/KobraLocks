@@ -1,0 +1,320 @@
+- A high-level overview of how various Azure components will be structured for the KobraLocks project. 
+- Includes the primary services that will likely be use to build a robust, scalable, and secure platform. 
+- The structure allows for further expansion as new requirements or services arise throughout the lifecycle of the project. 
+
+**In the future, each component needs to be reviewed and configured in depth based on the specific operational, security, and compliance needs**
+
+KobraLocksAzureInfrastructure/
+│
+├── README.md                                   # Overview and instructions for the Azure infrastructure
+├── ARM_Templates/                              # Azure Resource Manager templates for infrastructure as code
+│
+├── AppServices/                                # Platform as a Service (PaaS) for hosting applications
+│   ├── KobraLocksBackend/                      # Hosting for the Django/Flask backend application
+│   │   ├── Configurations/                     # Environment-specific settings for the application
+│   │   │   ├── EnvironmentVariables/           # Key-value pairs for application configuration
+│   │   │   ├── ConnectionStrings/              # Database and other service connection details
+│   │   │   └── AppSettings.json                # JSON file for platform-specific settings
+│   │   │
+│   │   ├── DeploymentSlots/                    # Environments for validating changes before production
+│   │   │   ├── DevelopmentSlot/                # Slot connected to the development branch
+│   │   │   ├── StagingSlot/                    # Pre-production slot for final testing
+│   │   │   └── ProductionSlot/                 # Slot mirroring the live production environment
+│   │   │
+│   │   ├── ScaleOutSettings/                   # Configuration for adapting to workload demands
+│   │   │   ├── AutoscaleRules/                 # Criteria for scaling up or down
+│   │   │   └── ScaleOutLimits/                 # Upper and lower limits on instance counts
+│   │   │
+│   │   ├── Networking/                         # Network settings for secure connectivity
+│   │   │   ├── VNetIntegration/                # Connection to Azure Virtual Network
+│   │   │   └── ServiceEndpoints/               # Endpoints for services within the VNet
+│   │   │
+│   │   └── BackupAndRestore/                   # Backup policies for disaster recovery
+│   │       ├── BackupSchedules/                # Timing and frequency of backups
+│   │       ├── RetentionPolicies/              # Duration for retaining backup data
+│   │       └── RestoreServices/                # Services to assist with data restoration
+│   │
+│   └── KobraLocksFrontend/                     # Hosting for the React-based frontend application
+│       ├── ContentDeliveryNetwork/             # Distribution network to serve static content globally
+│       │   ├── EndpointConfigurations/         # Settings for CDN endpoints
+│       │   ├── CachingRules/                   # Rules for caching static assets
+│       │   └── CompressionSettings/            # Settings for compressing content to optimize delivery
+│       │
+│       ├── CustomDomains/                      # Domain management for a professional look
+│       │   ├── DomainNameSetup/                # Configuration of custom domain names
+│       │   └── DNSConfiguration/               # DNS settings to point to the App Service
+│       │
+│       ├── SSLCertificates/                    # SSL/TLS certificates for secure communications
+│       │   ├── CertificateRequests/            # Requests and acquisitions of new certificates
+│       │   ├── Bindings/                       # Assigning certificates to domain names
+│       │   └── RenewalManagement/              # Automated processes for certificate renewals
+│       │
+│       └── DeploymentSlots/                    # Environments for phased deployment without downtime
+│           ├── FeatureTestingSlot/             # Slot for testing new features
+│           ├── A/BTestingSlot/                 # Slot for A/B testing with a subset of users
+│           └── HotfixSlot/                     # Slot for urgent fixes and patches
+│
+├── KubernetesServices/                         # Services for orchestrating containerized applications
+│   ├── AKS_Cluster/                            # Centralized Kubernetes cluster for managing microservices
+│   │   ├── NodePools/                          
+│   │   │   ├── GeneralWorkloadPool/            # Node pool optimized for the general backend/frontend workloads
+│   │   │   │   ├── VMSize/                     # Virtual machine size for each node in the pool
+│   │   │   │   ├── AutoscalingConfig/          # Autoscaling settings for dynamic scaling based on demand
+│   │   │   │   └── LabelsAndTaints/            # Labels for workload placement and taints for restricting pods
+│   │   │   │
+│   │   │   └── GPUWorkloadPool/                # Specialized node pool with GPU resources for compute-intensive tasks
+│   │   │       ├── VMSize/                     # VM sizes with GPU capabilities
+│   │   │       ├── AutoscalingConfig/          # Autoscaling specifically for GPU nodes
+│   │   │       └── LabelsAndTaints/            #
+│   │   │       └── LabelsAndTaints/            # Specific labels and taints for GPU workloads
+│   │   │
+│   │   ├── Namespaces/
+│   │   │   ├── Development/                    # Development namespace for day-to-day development activities
+│   │   │   │   ├── ResourceQuotas/             # Quotas to limit resource usage within the namespace
+│   │   │   │   └── DevOpsIntegration/          # CI/CD integration for automatic deployment pipelines
+│   │   │   │
+│   │   │   ├── Staging/                        # Staging namespace for testing that mimics the production environment
+│   │   │   │   ├── ResourceQuotas/             # Resource limitations similar to production
+│   │   │   │   └── PreProdTestingTools/        # Tools and services for performance and security testing
+│   │   │   │
+│   │   │   └── Production/                     # Production namespace where live workloads are run
+│   │   │       ├── HorizontalPodAutoscaling/   # Autoscaling setup to automatically adjust the number of pods
+│   │   │       ├── DisasterRecoveryPlans/      # Plans and processes for recovering from critical failures
+│   │   │       └── LoadBalancing/              # Services for distributing traffic across pods
+│   │   │
+│   │   ├── HelmCharts/
+│   │   │   ├── BackendAPI/                     # Chart for deploying and managing the backend API service
+│   │   │   │   ├── ChartConfigs/               # Configuration options for the deployment
+│   │   │   │   ├── ReleaseManagement/          # Management of versioned releases
+│   │   │   │   └── UpgradeStrategies/          # Strategies for zero-downtime upgrades
+│   │   │   │
+│   │   │   ├── FrontendApp/                    # Chart for deploying the frontend application
+│   │   │   │   ├── ChartConfigs/               # Customizable options for frontend deployments
+│   │   │   │   ├── ReleaseManagement/          # Handling of release cycles
+│   │   │   │   └── StaticContentHandling/      # Strategies for serving static content
+│   │   │   │
+│   │   │   └── MLModels/                       # Chart for machine learning model services
+│   │   │       ├── ChartConfigs/               # Configuration parameters for ML deployments
+│   │   │       ├── ModelServing/               # Mechanisms for serving the ML models
+│   │   │       └── ModelVersioning/            # Version control for machine learning models
+│   │   │
+│   │   ├── Monitoring/
+│   │   │   ├── Logs/                           # Collection, storage, and analysis of logs
+│   │   │   │   ├── LogRetention/               # Policies for how long logs are kept
+│   │   │   │   └── LogAnalyticsIntegration/    # Integration with Azure Log Analytics for deeper insights
+│   │   │   │
+│   │   │   └── Metrics/                        # Monitoring of performance metrics
+│   │   │       ├── MetricAlerts/               # Alerts based on specific metric thresholds
+│   │   │       └── DashboardConfigurations/    # Dashboards for visualizing metrics in real-time
+│   │   │
+│   │   └── Security/
+│   │       ├── RoleBindings/                   # Definitions of roles and bindings for user and process permissions
+│   │       └── NetworkPolicies/                # Set of rules to govern the ingress and egress traffic between pods
+│   │
+│   └── ACR/                                    # Azure service for managing private Docker container registries
+│       ├── Repositories/
+│       │   ├── BackendImages/                  # Docker registry for backend-related images
+│       │   │   ├── BuildPipelines/             # CI/CD pipelines that build and push images to ACR
+│       │   │   └── ImageScanning/              # Security scanning for vulnerabilities in images
+│       │   │
+│       │   ├── FrontendImages/                 # Docker registry for frontend-related images
+│       │   │   ├── BuildPipelines/             # Automated processes to build and update frontend images
+│       │   │   └── ImageScanning/              # Scanning and ensuring frontend images are secure
+│       │   │
+│       │   └── WorkerImages/                   # Registry for background worker or utility images
+│       │       ├── BuildPipelines/             # Build definitions for worker images
+│       │       └── ImageScanning/              #
+│       │       └── ImageScanning/              # Regular scans for security vulnerabilities
+│       │
+│       ├── Webhooks/                           # Webhooks for triggering actions on registry events
+│       │   ├── OnPush/                         # Triggered when new images are pushed to the registry
+│       │   └── OnPull/                         # Triggered when images are pulled for deployment
+│       │
+│       └── GeoReplication/                     # Feature to replicate images across multiple geographic regions
+│           └── ReplicationRegions/             # Specific regions where images are replicated for faster access
+│
+├── Databases/                                  # Centralized data storage solutions for KobraLocks
+│   ├── PostgreSQL/                             # Managed relational database service for structured data
+│   │   ├── Server/                             # PostgreSQL server instance
+│   │   │   ├── Configuration/                  # Server configuration including versions, parameters
+│   │   │   ├── FirewallRules/                  # IP firewall rules for secure access
+│   │   │   └── MaintenanceWindows/             # Scheduled maintenance settings
+│   │   │
+│   │   ├── Databases/                          # Individual databases for separate concerns
+│   │   │   ├── UserAccountsDB/                 # Database for user account information
+│   │   │   ├── TransactionsDB/                 # Database for financial transactions
+│   │   │   └── BettingDataDB/                  # Database for betting data and statistics
+│   │   │
+│   │   └── Tables/                             # Tables within each database for storing related data
+│   │       ├── Users/                          # User profile information and authentication details
+│   │       ├── Bets/                           # Records of bets placed by users
+│   │       ├── Events/                         # Details of sporting events
+│   │       └── Payments/                       # Payment method and transaction history
+│   │
+│   └── CosmosDB/                               # Globally distributed database service for NoSQL data
+│       ├── Account/                            # Cosmos DB account that contains all the collections
+│       │   ├── APIType/                        # API type configuration set to MongoDB for compatibility
+│       │   ├── Replication/                    # Geo-replication settings for global distribution
+│       │   └── ConsistencyLevel/               # Consistency configuration for read/write operations
+│       │
+│       ├── Databases/                          # Databases within the Cosmos DB account
+│       │   ├── UserInteractionsDB/             # Database for user interaction data
+│       │   └── LogsDB/                         # Database for logs and telemetry
+│       │
+│       └── Collections/                        # Containers within the databases for storing documents
+│           ├── UserActivities/                 # Documents detailing user activities and behaviors
+│           └── BetHistory/                     # Historical records of bets placed by users
+│
+├── StorageAccounts/                            # Storage accounts for blobs, files, queues, and tables
+│   ├── BlobStorage/                            # Blob storage for large objects and unstructured data
+│   │   ├── Containers/                         # Logical containers for organizing blobs
+│   │   │   ├── UserUploads/                    # Stores user-uploaded content
+│   │   │   ├── Logs/                           # Application and diagnostic logs
+│   │   │   └── Backups/                        # Backup data for disaster recovery
+│   │   │
+│   │   └── LifecycleManagement/                # Policies for automatic blob lifecycle management
+│   │
+│   └── FileStorage/                            # Managed file shares for storing and accessing files
+│       ├── Shares/                             # Individual shares for different purposes
+│       │   ├── ConfigurationFiles/             # Stores configuration files
+│       │   └── UserData/                       # User-generated data that needs persistent storage
+│       │
+│       └── SnapshotPolicies/                   # Automated policies for taking share snapshots
+│
+├── Networking/                                 # Network resources for communication and security
+│   ├── VirtualNetwork/                         # Backbone network connecting Azure resources
+│   │   ├── Subnets/                            # Sub-networks to isolate resources
+│   │   │   ├── AKSSubnet/                      # Dedicated subnet for the AKS cluster
+│   │   │   └── AppServiceSubnet/               # Subnet for App Services
+│   │   │
+│   │   └── Peering/                            # Connects this VNet to other VNets
+│   │
+│   ├── ApplicationGateway/                     # Application-level load balancer with WAF
+│   │   ├── BackendPools/                       # Defines backend pools for routing traffic
+│   │   ├── RoutingRules/
+│   │   ├── RoutingRules/                       # Rules for routing traffic to backend pools
+│   │   │   └── PathBasedRules/                 # Routes traffic based on URL path
+│   │   │
+│   │   └── WAFConfig/                          # Web Application Firewall configuration
+│   │       ├── Rules/                          # Custom rules for blocking or allowing traffic
+│   │       └── ManagedRules/                   # Pre-configured rule sets for common threats
+│   │
+│   └── NetworkSecurityGroups/                  # Collections of security rules to control network traffic
+│       ├── NSGs/                               # Individual network security groups
+│       │   ├── AKSNSG/                         # NSG for AKS cluster
+│       │   │   └── Rules/                      # Security rules applied to AKS cluster traffic
+│       │   │
+│       │   └── AppServicesNSG/                 # NSG for App Services
+│       │       └── Rules/                      # Security rules for traffic to and from App Services
+│       │
+│       └── FlowLogs/                           # Records traffic for analysis
+│           └── StorageLocation/                # Specifies where flow logs are stored for analysis
+│
+├── IdentityAndAccess/                          # Centralized access management to secure resources
+│   ├── AzureActiveDirectory/                   # Azure AD for comprehensive identity and access management
+│   │   ├── UserGroups/                         # Groups for organizing users by role or function
+│   │   │   ├── Developers/                     # Group for development team members
+│   │   │   ├── Operations/                     # Group for operations team members
+│   │   │   └── Analysts/                       # Group for data analysts
+│   │   │
+│   │   ├── Applications/                       # Registered applications for access management
+│   │   │   ├── KobraLocksApp/                  # Application registration for the KobraLocks platform
+│   │   │   │   └── Permissions/                # API permissions and roles for the application
+│   │   │   │
+│   │   │   └── ThirdPartyServices/             # Third-party services that need access to KobraLocks resources
+│   │   │       └── Permissions/                # Scoped permissions for third-party service integrations
+│   │   │
+│   │   └── ConditionalAccessPolicies/          # Policies to enforce conditional access based on context
+│   │       ├── MultiFactorAuthentication/      # MFA requirements for sensitive operations
+│   │       └── LocationBasedAccess/            # Access restrictions based on geographic location
+│   │
+│   └── RBAC_Policies/                          # Role-based access control to define granular access rights
+│       ├── Roles/                              # Custom and predefined roles for resource access
+│       │   ├── BackendDeveloper/               # Role with access to backend resources
+│       │   ├── FrontendDeveloper/              # Role with access to frontend resources
+│       │   └── DataAnalyst/                    # Role with access to analytics and data resources
+│       │
+│       └── Assignments/                        # Assignment of roles to users or groups
+│           ├── UserToRole/                     # Direct assignment of roles to individual users
+│           └── GroupToRole/                    # Assignment of roles to groups for broader access control
+│
+├── MonitoringAndManagement/                    # Infrastructure for observing and managing system health
+│   ├── AzureMonitor/                           # Unified service for metrics, logs, and alerts
+│   │   ├── ApplicationInsights/                # Application performance monitoring and user analytics
+│   │   │   ├── KobraLocksAppInsights/          # Insights instance for the KobraLocks application
+│   │   │   └── PerformanceCounters/            # Custom performance counters for detailed monitoring
+│   │   │
+│   │   ├── MetricsExplorer/                    # Dashboard for visualizing metrics across services
+│   │   │   └── CustomDashboards/               # Customized dashboards for different operational views
+│   │   │
+│   │   └── Alerts/                             # Alerting mechanism for automated notification
+│   │       ├── MetricAlerts/                   # Alerts based on metric thresholds
+│   │       └── LogAlerts/                      # Alerts triggered by specific log patterns
+│   │
+│   ├── LogAnalyticsWorkspaces/                 # Central repository for log data and query capabilities
+│   │   ├── KobraLocksWorkspace/                # Dedicated workspace for the KobraLocks logs
+│   │   └── QueryPacks/
+│   ├── LogAnalyticsWorkspaces/                 # Central repository for log data and query capabilities
+│   │   ├── KobraLocksWorkspace/                # Dedicated workspace for the KobraLocks logs
+│   │   └── QueryPacks/                         # Collections of queries for common analysis tasks
+│   │
+│   └── AlertsAndMetrics/                       # Comprehensive alerting and metric collection for infrastructure
+│       ├── ServiceHealthAlerts/                # Alerts for service health issues
+│       └── ResourceUtilizationMetrics/         # Metrics for monitoring resource utilization and performance
+│
+├── DevOps/                                     # CI/CD and automation to ensure smooth development workflows
+│   ├── GitHubActions/                          # Automation and CI/CD workflows integrated with GitHub
+│   │   ├── Workflows/                          # Defined CI/CD pipelines for automated processes
+│   │   │   ├── BuildPipeline.yml               # Pipeline for building and testing the application code
+│   │   │   ├── DeployBackend.yml               # Automated deployment of backend services to Azure
+│   │   │   └── DeployFrontend.yml              # Automated deployment of frontend application
+│   │   │
+│   │   └── Secrets/                            # Secure storage for CI/CD secrets like Azure credentials
+│   │       ├── AzureServicePrincipal/          # Service principal for Azure access
+│   │       └── DockerRegistryCredentials/      # Credentials for private Docker registry access
+│   │
+│   └── AzureDevOps/                            # Azure DevOps for more complex build and release pipelines
+│       ├── ProjectBoards/                      # Agile project management boards for task tracking
+│       ├── Repositories/                       # Source code repositories hosted in Azure DevOps
+│       ├── Pipelines/                          # Build and release pipelines for continuous integration
+│       │   ├── BuildPipelines/                 # Pipelines for compiling and validating code
+│       │   └── ReleasePipelines/               # Pipelines for deploying applications to various environments
+│       │
+│       └── Artifacts/                          # Package feeds for hosting and sharing packages across pipelines
+│
+├── Security/                                   # Security services to protect the application and data
+│   ├── KeyVault/                               # Centralized storage for securely managing application secrets
+│   │   ├── Secrets/                            # Application secrets like database connection strings
+│   │   ├── Keys/                               # Encryption keys for data encryption needs
+│   │   └── Certificates/                       # TLS/SSL certificates for secure communications
+│   │
+│   ├── ApplicationInsights/                    # Telemetry and performance monitoring for applications
+│   │   ├── Telemetry/                          # Collected runtime data for analysis and diagnostics
+│   │   ├── LiveMetrics/                        # Real-time performance metrics
+│   │   └── Failures/                           # Tracking and analyzing failures for continuous improvement
+│   │
+│   └── DefenderForCloud/                       # Comprehensive security management and threat protection
+│       ├── PolicyAssignments/                  # Security policies applied to cloud resources
+│       ├── SecurityAlerts/                     # Alerts for detected security threats
+│       └── ComplianceReports/                  # Compliance assessment reports for auditing and regulatory purposes
+│
+└── AdditionalServices/
+    ├── AzureFunctions/                         # Serverless computing to run event-driven background tasks
+    │   ├── HttpTriggers/                       # Functions triggered by HTTP requests
+    │   ├── TimerTriggers/                      # Functions executed on a schedule
+    │   └── EventTriggers/                      # Functions responding to Azure Event Hub or Queue messages
+    │
+    ├── EventHub/                               # Scalable event processing service for real-time data streams
+    │   ├── Namespaces/                         # Isolation container for Event Hub instances
+    │   │   └── KobraLocksEvents/               # Specific namespace for KobraLocks event data
+    │   ├── Topics/                             # Categories for event data, e.g., user actions, system logs
+    │   └── ConsumerGroups/                     # Logical division of event stream consumers
+    │
+    └── CDN/                                    # Content Delivery Network for serving static assets globally
+        ├── Endpoints/                          # Points of presence where content is cached and served
+        │   ├── WebAssets/                      # Endpoint for website static files like CSS, JS, images
+        │   └── MediaContent/                   # Endpoint for larger media files, e.g., videos, large images
+        │
+        └── Security/                           # Security features for CDN content
+            ├── CustomDomainsSSL/               # SSL support for custom CDN domains
+            └── ContentProtection/              # Restrictions and access control for sensitive content

@@ -1,0 +1,3 @@
+Postgre: kl-use-postgre
+	Username: kl_use_postgre_admin
+	Password: ripsoz-bagxA0-qihjuw
