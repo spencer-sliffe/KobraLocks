@@ -1,0 +1,40 @@
+KobraLocksGithubInfrastructure/
+│
+├── README.md                                   # Overview and instructions for managing GitHub resources
+├── Workflows/                                  # GitHub Actions workflows for CI/CD and automation
+│   ├── CI/                                     # Continuous Integration workflows
+│   │   ├── Linting.yml                         # Workflow for linting code
+│   │   ├── Build.yml                           # Workflow for building the application
+│   │   └── Test.yml                            # Workflow for running tests
+│   │
+│   ├── CD/                                     # Continuous Deployment workflows
+│   │   ├── DeployToAzure.yml                   # Workflow for deploying to Azure App Services
+│   │   └── DeployToKubernetes.yml              # Workflow for deploying to Kubernetes (AKS)
+│   │
+│   └── Operations/                             # Operational workflows
+│       ├── DatabaseMigrations.yml              # Workflow for managing database migrations
+│       └── SecurityScans.yml                   # Workflow for running security scans
+│
+├── Secrets/                                    # Secrets and credentials for workflows
+│   ├── AzureCredentials/                       # Azure service principal for deployment
+│   ├── DockerHubCredentials/                   # Credentials for Docker Hub for container images
+│   └── CodeSigningCertificates/                # Certificates for signing code and applications
+│
+├── Documentation/                              # Documentation related to project setup and workflows
+│   ├── SetupGuides/                            # Guides for setting up development environments
+│   ├── WorkflowDescriptions/                   # Detailed descriptions of each workflow
+│   └── BestPractices/                          # Best practices for using GitHub Actions
+│
+├── Templates/                                  # Template files for issues, PRs, and more
+│   ├── ISSUE_TEMPLATE/                         # Issue templates for bug reports and feature requests
+│   │   ├── bug_report.md                       # Template for reporting bugs
+│   │   └── feature_request.md                  # Template for suggesting new features
+│   │
+│   └── PULL_REQUEST_TEMPLATE.md                # Template for pull requests
+│
+├── CodeOwners/                                 # Code ownership and review configurations
+│   └── CODEOWNERS                              # File defining individuals or teams responsible for code in the repository
+│
+└── BranchPolicies/                             # Branch policies for managing contributions
+    ├── MainBranchProtection.yml                # Protection rules for the main branch
+    └── FeatureBranches.yml                     # Guidelines and policies for feature branch workflow

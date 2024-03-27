@@ -2,7 +2,7 @@
 - Includes the primary services that will likely be use to build a robust, scalable, and secure platform. 
 - The structure allows for further expansion as new requirements or services arise throughout the lifecycle of the project. 
 
-**In the future, each component needs to be reviewed and configured in depth based on the specific operational, security, and compliance needs**
+**In the future, each component needs to be reviewed & expanded thoroughly based on the specific operational, security, and compliance needs**
 
 KobraLocksAzureInfrastructure/
 │
@@ -55,7 +55,7 @@ KobraLocksAzureInfrastructure/
 │           └── HotfixSlot/                     # Slot for urgent fixes and patches
 │
 ├── KubernetesServices/                         # Services for orchestrating containerized applications
-│   ├── AKS_Cluster/                            # Centralized Kubernetes cluster for managing microservices
+│   ├── KobraLocksCluster/                            # Centralized Kubernetes cluster for managing microservices
 │   │   ├── NodePools/                          
 │   │   │   ├── GeneralWorkloadPool/            # Node pool optimized for the general backend/frontend workloads
 │   │   │   │   ├── VMSize/                     # Virtual machine size for each node in the pool

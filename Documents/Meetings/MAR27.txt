@@ -1,0 +1,11 @@
+- Charge per sport
+- Pay per sport per season
+	- Donate 10% to charity
+
+
+Get:
+	- Stats on betters/betting per sport
+
+	- How many users to break even
+
+	- 

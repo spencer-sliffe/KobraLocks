@@ -36,6 +36,10 @@ AZURE VIRTUAL MACHINES
 	-	Bandwidth
 		-	Estimated total									USD 16.09/month
 
+
+
 		
 		
+
+
 
