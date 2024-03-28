@@ -10,7 +10,7 @@ KobraLocksAzureInfrastructure/
 ├── ARM_Templates/                              # Azure Resource Manager templates for infrastructure as code
 │
 ├── AppServices/
-│   ├── KobraLocksBackend/                              # Django/Flask application serving as the project's backend
+│   ├── KobraLocksBackend/                              # Django application serving as the project's backend
 │   │   ├── Configurations/                             # Tailored settings for application optimization
 │   │   │   ├── EnvironmentVariables/                   # Essential dynamic settings for app configuration
 │   │   │   │   ├── DJANGO_SECRET_KEY                   # Key used for cryptographic signing, must be kept secret
