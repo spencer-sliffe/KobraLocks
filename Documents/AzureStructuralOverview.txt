@@ -14,7 +14,6 @@ KobraLocksAzureInfrastructure/
 │   │   ├── Configurations/                             # Tailored settings for application optimization
 │   │   │   ├── EnvironmentVariables/                   # Essential dynamic settings for app configuration
 │   │   │   │   ├── DJANGO_SECRET_KEY                   # Key used for cryptographic signing, must be kept secret
-│   │   │   │   ├── FLASK_APP_SETTINGS                  # Points to the Flask config file for different environments
 │   │   │   │   ├── DATABASE_URL                        # URL for the database connection, including credentials
 │   │   │   │   └── REDIS_URL                           # Connection string for Redis, used for caching/session storage
 │   │   │   ├── ConnectionStrings/                      # Encrypted strings for secure integration with services
@@ -379,6 +378,44 @@ KobraLocksAzureInfrastructure/
 │       │   └── Function: "Proactively notifies system administrators about service disruptions or degradations."
 │       └── ResourceUtilizationMetrics/         # Metrics for monitoring resource utilization and performance
 │           └── Insight: "Tracks CPU, memory, and I/O usage to ensure resources are optimally utilized."
+│
+├── MachineLearning/                                        # Dedicated section for machine learning operations
+│   ├── AzureMLWorkspaces/                                  # Azure Machine Learning Workspaces for ML project management
+│   │   ├── Experiments/                                    # Manages and tracks ML experiments, including model training and testing
+│   │   │   └── ExperimentTracking: "Enables tracking of ML experiment runs and model comparison."
+│   │   ├── ComputeClusters/                                # Provides scalable cloud resources for model training
+│   │   │   └── GPUClusters: "Virtual Machines equipped with GPUs for training complex ML models efficiently."
+│   │   └── Datastores/                                     # Secure and scalable storage options for datasets used in ML training
+│   │       └── TrainingData: "Stores and manages datasets securely, supporting various data formats."
+│   │
+│   ├── ModelDeployment/                                    # Processes and tools for deploying trained ML models
+│   │   ├── AKS/                                            # Utilizes Azure Kubernetes Service for hosting ML models
+│   │   │   ├── MLModelsNamespace/                          # Kubernetes namespace dedicated to ML models
+│   │   │   │   └── Deployment: "Deploys ML models as containerized services, enabling scalable inference."
+│   │   │   └── InferenceServices/                          # Services for serving ML model inferences
+│   │   │       └── TensorFlowServing: "Service for deploying TensorFlow models for real-time inference requests."
+│   │   │
+│   │   └── AzureMLModels/                                  # Azure Machine Learning service for model management and deployment
+│   │       └── Endpoints/                                  # Managed endpoints for deploying ML models as web services
+│   │           └── RealTimeInference: "Endpoints for real-time data processing and inference using deployed ML models."
+│   │
+│   ├── CICD/                                               # Continuous Integration and Continuous Deployment workflows for ML
+│   │   ├── AzureDevOps/                                    # Leverages Azure DevOps for automating ML workflows
+│   │   │   ├── BuildPipelines/                             # Defines pipelines for automating the build and training of ML models
+│   │   │   │   └── MLModelTraining: "Pipeline for the automated training, testing, and evaluation of ML models."
+│   │   │   └── ReleasePipelines/                           # Manages the deployment process of ML models to various environments
+│   │   │       └── ModelDeployment: "Automates the deployment process of trained ML models to production environments."
+│   │   │
+│   │   └── GitHubActions/                                  # Utilizes GitHub Actions for MLOps within the GitHub ecosystem
+│   │       └── MLOps/                                      # Integration of machine learning operations with GitHub Actions
+│   │           └── ModelTesting: "Automated workflows for testing ML models as part of continuous integration processes."
+│   │
+│   └── Monitoring/                                         # Monitoring and management tools for deployed ML models
+│       ├── AzureMonitor/                                   # Azure Monitor for collecting and analyzing telemetry data
+│       │   └── ApplicationInsights/                        # Provides detailed insights into application and ML model performance
+│       │       └── MLModelPerformance: "Tracks the performance, usage, and health of ML models in production."
+│       └── Alerts/                                         # Configures alerts for monitoring the operational status of ML models
+│           └── PerformanceThresholds: "Sets up alerts for anomalies or deviations in model performance metrics."
 │
 ├── DevOps/                                     # CI/CD and automation to ensure smooth development workflows
 │   ├── GitHubActions/                          # Automation and CI/CD workflows integrated with GitHub
