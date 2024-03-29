@@ -11,7 +11,7 @@ KobraLocks System Architecture Overview
 │   ├── API Gateway
 │   │   └── Routes requests to appropriate backend services, providing a single entry point for the frontend
 │   │
-│   ├── User Service (Django/Flask)
+│   ├── User Service (Django)
 │   │   ├── Handles user authentication, preferences, and profile management
 │   │   ├── Interacts with PostgreSQL for user data
 │   │   └── Communicates with Frontend for user-related operations
