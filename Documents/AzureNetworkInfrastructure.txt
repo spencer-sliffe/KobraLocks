@@ -2,64 +2,85 @@ KobraLocksAzureInfrastructure/
 │
 ├── Networking/
 │   ├── VirtualNetworks/
-│   │   ├── KobraLocksMainVnet/                   # Primary VNet hosting the majority of KobraLocks resources
-│   │   │   ├── AddressSpace: "10.0.0.0/16"      # The IP range for the VNet
+│   │   ├── KobraLocksMainVnet/
+│   │   │   ├── Address Space: "10.0.0.0/16"
+│   │   │   ├── DNS Servers: Azure-provided
 │   │   │   ├── Subnets/
-│   │   │   │   ├── AppServiceSubnet/            # Subnet for App Services
-│   │   │   │   │   └── Range: "10.0.0.0/24"
-│   │   │   │   ├── DatabaseSubnet/              # Subnet for Azure Database for PostgreSQL
-│   │   │   │   │   └── Range: "10.0.1.0/24"
-│   │   │   │   └── AksSubnet/                   # Subnet for Azure Kubernetes Service
-│   │   │   │       └── Range: "10.0.2.0/24"
+│   │   │   │   ├── AppServiceSubnet/
+│   │   │   │   │   ├── Range: "10.0.0.0/24"
+│   │   │   │   │   ├── ServiceEndpoints/
+│   │   │   │   │   │   └── Microsoft.Sql
+│   │   │   │   │   ├── Network Security Group: AppServicesNSG
+│   │   │   │   │   └── VNet Integration: Enabled for KobraLocksBackend and KobraLocksFrontend
+│   │   │   │   ├── DatabaseSubnet/
+│   │   │   │   │   ├── Range: "10.0.1.0/24"
+│   │   │   │   │   ├── ServiceEndpoints/
+│   │   │   │   │   │   └── Microsoft.Sql
+│   │   │   │   │   └── Network Security Group: DatabaseNSG
+│   │   │   │   └── AksSubnet/
+│   │   │   │       ├── Range: "10.0.2.0/24"
+│   │   │   │       └── ServiceEndpoints: Not required
 │   │   │   ├── Peering/
-│   │   │   │   └── PeeredTo: "KobraLocksDRVnet" # Peering to a disaster recovery VNet
-│   │   │   └── ServiceEndpoints/                # Service endpoints for secure and direct connectivity
-│   │   │       └── Microsoft.Sql
-│   │   │
-│   │   └── KobraLocksDRVnet/                    # Disaster recovery VNet
-│   │       ├── AddressSpace: "10.1.0.0/16"
+│   │   │   │   └── PeeringWithKobraLocksDRVnet/
+│   │   │   │       ├── Name: "MainToDRPeering"
+│   │   │   │       └── Settings: [AllowVirtualNetworkAccess: true, AllowForwardedTraffic: true, AllowGatewayTransit: false, UseRemoteGateways: false]
+│   │   │   ├── DDoS Protection: Standard (Optional)
+│   │   │   ├── Firewall: Configured (Optional)
+│   │   │   └── Microsoft Defender for Cloud: Enabled
+│   │   │   └── Private Endpoints: Configured for databases and storage accounts
+│   │   │   └── Locks: Applied to critical resources
+│   │   └── KobraLocksDRVnet/
+│   │       ├── Address Space: "10.1.0.0/16"
+│   │       ├── Subnets: Configured as needed for disaster recovery
 │   │       └── Peering/
-│   │           └── PeeredTo: "KobraLocksMainVnet"
-│   │
+│   │           └── PeeringWithKobraLocksMainVnet/
+│   │               ├── Name: "DRToMainPeering"
+│   │               └── Settings: [AllowVirtualNetworkAccess: true, AllowForwardedTraffic: true, AllowGatewayTransit: false, UseRemoteGateways: false]
 │   ├── PrivateDNSZones/
-│   │   ├── postgresql.database.azure.com/       # Private DNS zone for PostgreSQL databases
+│   │   ├── postgresql.database.azure.com/
 │   │   │   └── RecordSets/
-│   │   │       └── dev-postgre-east-us          # A record for the PostgreSQL server
-│   │   └── privatelink.blob.core.windows.net/   # Private DNS zone for Azure Blob Storage
+│   │   │       ├── dev-postgre-east-us
+│   │   │       └── Link: Linked to KobraLocksMainVnet and KobraLocksDRVnet
+│   │   └── privatelink.blob.core.windows.net/
 │   │       └── RecordSets/
-│   │           └── blobstorage                  # A record for the blob storage account
-│   │
+│   │           └── blobstorage
+│   │           └── Link: Linked to KobraLocksMainVnet
 │   └── NetworkSecurityGroups/
-│       ├── AppServicesNSG/                      # NSG for App Services
+│       ├── AppServicesNSG/
 │       │   └── Rules/
 │       │       ├── AllowHTTPS
 │       │       └── DenyAllOutbound
-│       └── DatabaseNSG/                         # NSG for Azure Database for PostgreSQL
+│       └── DatabaseNSG/
 │           └── Rules/
 │               ├── AllowVnetInbound
 │               └── DenyAllOutbound
 │
 ├── AppServices/
 │   ├── KobraLocksBackend/
-│   │   └── Networking/
-│   │       └── VNetIntegration/
-│   │           └── Subnet: "AppServiceSubnet"
+│   │   ├── Networking/
+│   │   │   └── VNet Integration/
+│   │   │       └── Subnet: "AppServiceSubnet"
+│   │   └── Microsoft Defender for Cloud: Enabled
 │   └── KobraLocksFrontend/
-│       └── Networking/
-│           └── VNetIntegration/
-│               └── Subnet: "AppServiceSubnet"
+│       ├── Networking/
+│       │   └── VNet Integration/
+│       │       └── Subnet: "AppServiceSubnet"
+│       └── Microsoft Defender for Cloud: Enabled
 │
 └── Databases/
     ├── PostgreSQL/
     │   ├── Server/
     │   │   └── Networking/
-    │   │       ├── VNetIntegration/
+    │   │       ├── VNet Integration/
     │   │       │   └── Subnet: "DatabaseSubnet"
-    │   │       └── PrivateEndpoint/
-    │   │           └── PrivateDNSZone: "postgresql.database.azure.com"
+    │   │       ├── Private Endpoint/
+    │   │       │   └── PrivateDNSZone: "postgresql.database.azure.com"
+    │   │       └── Microsoft Defender for Cloud: Enabled
     │   └── PrivateDNSZoneLink/
     │       └── LinkTo: "postgresql.database.azure.com"
     └── CosmosDB/
         └── Networking/
-            └── VirtualNetworkServiceEndpoints/
-                └── EnabledFor: "KobraLocksMainVnet"
+            ├── VirtualNetworkServiceEndpoints/
+            │   └── EnabledFor: "KobraLocksMainVnet"
+            └── Microsoft Defender for Cloud: Enabled
+
