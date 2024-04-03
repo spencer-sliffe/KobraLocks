@@ -59,43 +59,52 @@ KobraLocksAzureInfrastructure/
 │   │       │       ├── Type: CNAME
 │   │       │       └── Alias: <Blob Storage Account Private Endpoint Alias>
 │   │       └── LinkToMainVnet: KobraLocksMainVnet-BlobStorage-DNS-Link
+│   │
 │   └── NetworkSecurityGroups/
 │       ├── AppServicesNSG/
-│       │   └── Rules/
+│       │   └── Rules:
 │       │       ├── AllowHTTPS
 │       │       │   ├── Priority: 100
 │       │       │   ├── Direction: Inbound
 │       │       │   ├── Access: Allow
 │       │       │   ├── Protocol: TCP
-│       │       │   ├── Port Range: 443
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 443
 │       │       │   ├── Source: Any
-│       │       │   └── Destination: Any
+│       │       │   ├── Destination: VirtualNetwork
+│       │       │   └── Service: HTTPS
 │       │       └── DenyAllOutbound
 │       │           ├── Priority: 200
 │       │           ├── Direction: Outbound
 │       │           ├── Access: Deny
 │       │           ├── Protocol: Any
-│       │           ├── Port Range: Any
-│       │           ├── Source: Any
-│       │           └── Destination: Any
+│       │           ├── Source Port Range: *
+│       │           ├── Destination Port Range: *
+│       │           ├── Source: VirtualNetwork
+│       │           ├── Destination: Internet
+│       │           └── Service: Custom
 │       ├── DatabaseNSG/
-│       │   └── Rules: 
+│       │   └── Rules:
 │       │       ├── AllowVnetInbound
 │       │       │   ├── Priority: 100
 │       │       │   ├── Direction: Inbound
 │       │       │   ├── Access: Allow
 │       │       │   ├── Protocol: TCP
-│       │       │   ├── Port Range: 5432
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 5432
 │       │       │   ├── Source: VirtualNetwork
-│       │       │   └── Destination: Any
+│       │       │   ├── Destination: VirtualNetwork
+│       │       │   └── Service: PostgreSQL
 │       │       └── DenyAllOutbound
 │       │           ├── Priority: 200
 │       │           ├── Direction: Outbound
 │       │           ├── Access: Deny
 │       │           ├── Protocol: Any
-│       │           ├── Port Range: Any
-│       │           ├── Source: Any
-│       │           └── Destination: Any
+│       │           ├── Source Port Range: *
+│       │           ├── Destination Port Range: *
+│       │           ├── Source: VirtualNetwork
+│       │           ├── Destination: Internet
+│       │           └── Service: Custom
 │       └── AKSNSG/
 │           └── Rules:
 │               ├── AllowAKSToAppServices
@@ -103,25 +112,31 @@ KobraLocksAzureInfrastructure/
 │               │   ├── Direction: Inbound
 │               │   ├── Access: Allow
 │               │   ├── Protocol: TCP
-│               │   ├── Port Range: 443
+│               │   ├── Source Port Range: *
+│               │   ├── Destination Port Range: 443
 │               │   ├── Source: VirtualNetwork
-│               │   └── Destination: VirtualNetwork (or specific CIDR for AppServiceSubnet if required)
+│               │   ├── Destination: VirtualNetwork
+│               │   └── Service: HTTPS
 │               ├── AllowAKSToDatabase
 │               │   ├── Priority: 110
 │               │   ├── Direction: Inbound
 │               │   ├── Access: Allow
 │               │   ├── Protocol: TCP
-│               │   ├── Port Range: 5432
+│               │   ├── Source Port Range: *
+│               │   ├── Destination Port Range: 5432
 │               │   ├── Source: VirtualNetwork
-│               │   └── Destination: VirtualNetwork (or specific CIDR for DatabaseSubnet if required)
+│               │   ├── Destination: VirtualNetwork
+│               │   └── Service: PostgreSQL
 │               └── DenyAllOutbound
 │                   ├── Priority: 200
 │                   ├── Direction: Outbound
 │                   ├── Access: Deny
 │                   ├── Protocol: Any
-│                   ├── Port Range: Any
-│                   ├── Source: Any
-│                   └── Destination: Any
+│                   ├── Source Port Range: *
+│                   ├── Destination Port Range: *
+│                   ├── Source: VirtualNetwork
+│                   ├── Destination: Internet
+│                   └── Service: Custom
 │
 ├── AppServices/
 │   ├── KobraLocksBackend/
