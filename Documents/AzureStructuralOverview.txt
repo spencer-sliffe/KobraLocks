@@ -11,18 +11,43 @@ KobraLocksAzureInfrastructure/
 │
 ├── AppServices/
 │   ├── KobraLocksBackend/                              # Django/Flask application serving as the project's backend
+│   │   ├── GeneralSettings/                            # Basic settings for the App Service
+│   │   │   ├── RuntimeStack: "Python 3.9"              # Specify the runtime stack according to the application requirements
+│   │   │   ├── StartupCommand: "gunicorn --bind=0.0.0.0 --timeout 600 kobra.wsgi:application"  # Example startup command for a Django app
+│   │   │   ├── FTPSState: "Disabled"                   # FTPS access state, recommend disabling if not needed
+│   │   │   └── HttpsOnly: "Enabled"                    # Forces HTTPS traffic only
+│   │   │
 │   │   ├── Configurations/                             # Tailored settings for application optimization
 │   │   │   ├── EnvironmentVariables/                   # Essential dynamic settings for app configuration
-│   │   │   │   ├── DJANGO_SECRET_KEY                   # Key used for cryptographic signing, must be kept secret
-│   │   │   │   ├── DATABASE_URL                        # URL for the database connection, including credentials
-│   │   │   │   └── REDIS_URL                           # Connection string for Redis, used for caching/session storage
+│   │   │   │   ├── DJANGO_SECRET_KEY: "<your_secret_key>" # Key used for cryptographic signing, must be kept secret
+│   │   │   │   ├── DATABASE_URL: "postgres://<username>:<password>@<hostname>:<port>/<database>" # Adjust with actual DB connection details
+│   │   │   │   └── REDIS_URL: "redis://:<password>@<hostname>:<port>"  # Adjust with actual Redis connection details
 │   │   │   ├── ConnectionStrings/                      # Encrypted strings for secure integration with services
-│   │   │   │   ├── AzureStorage                        # Used for Azure Blob storage access, includes SAS token
-│   │   │   │   └── ExternalAPIs                        # Keys and URLs for external APIs (e.g., payment gateways)
+│   │   │   │   ├── AzureStorage: "<storage_account_connection_string>" # Used for Azure Blob storage access, includes SAS token
+│   │   │   │   └── ExternalAPIs: "<api_keys>"          # Keys and URLs for external APIs (e.g., payment gateways, sports data APIs)
 │   │   │   └── AppSettings.json                        # Configurations that influence app features and behaviors
-│   │   │       ├── LoggingLevel                        # Determines the verbosity of logs (debug, info, warning)
-│   │   │       ├── FeatureFlags                        # Toggles for enabling/disabling specific application features
-│   │   │       └── MaintenanceMode                     # Temporarily disables user access for maintenance purposes
+│   │   │       ├── LoggingLevel: "Information"         # Determines the verbosity of logs (Debug, Information, Warning, Error)
+│   │   │       ├── FeatureFlags: {"FeatureA": true, "FeatureB": false} # Toggles for enabling/disabling specific application features
+│   │   │       └── MaintenanceMode: false              # Temporarily disables user access for maintenance purposes
+│   │   │
+│   │   ├── ScalingSettings/                            # Controls for scaling the application based on demand
+│   │   │   ├── ComputeMode: "Serverless"               # Example for a serverless compute mode, adjust based on requirements
+│   │   │   ├── AutoScale: "Enabled"                    # Enables automatic scaling
+│   │   │   ├── MinInstances: 1                         # Minimum number of instances to scale down to
+│   │   │   ├── MaxInstances: 10                        # Maximum number of instances to scale up to
+│   │   │   └── ScaleOutTriggers: {CPUUsage: 70, MemoryUsage: 80} # Triggers for scaling out instances
+│   │   │
+│   │   ├── Networking/                                 # Networking configurations for secure and efficient connectivity
+│   │   │   ├── VNet Integration:                       # Integrates App Service with Azure Virtual Network
+│   │   │   │   └── Subnet: "AppServiceSubnet"          # Subnet within the VNet for the App Service
+│   │   │   └── AccessRestrictions:                     # Restricts access to the App Service
+│   │   │       ├── AllowSubnets: ["10.0.0.0/24"]       # Allow access from these subnets
+│   │   │       └── DenyPublicNetwork: true             # Deny access from public internet if true
+│   │   │
+│   │   ├── Monitoring/                                 # Monitoring and diagnostics settings
+│   │   │   ├── ApplicationInsights: "Enabled"          # Enables Application Insights for monitoring app performance and usage
+│   │   │   ├── DetailedErrorMessages: "Enabled"        # Enables detailed error messages
+│   │   │   └── FailedRequestTracing: "Enabled"         # Enables tracing for failed requests
 │   │   │
 │   │   ├── DeploymentSlots/                            # Manage different stages of the deployment lifecycle
 │   │   │   ├── DevelopmentSlot/                        # Continuous integration environment for new builds
@@ -31,21 +56,6 @@ KobraLocksAzureInfrastructure/
 │   │   │   │   └── Settings                            # Adjustments for staging, e.g., mock payment processor details
 │   │   │   └── ProductionSlot/                         # Hosts the live application accessed by end users
 │   │   │       └── Settings                            # Production-specific configurations, highest security level
-│   │   │
-│   │   ├── ScaleOutSettings/                           # Controls dynamic resource allocation based on demand
-│   │   │   ├── AutoscaleRules/                         # Defines metrics and thresholds for scaling
-│   │   │   │   ├── CPU_Percentage                      # Scales out when CPU usage exceeds a certain percentage
-│   │   │   │   └── MemoryUsage                         # Triggers scaling based on memory consumption
-│   │   │   └── ScaleOutLimits/                         # Sets boundaries for automatic scaling to control costs
-│   │   │       ├── MinimumInstances                    # The minimum number of instances to keep running
-│   │   │       └── MaximumInstances                    # Caps the number of instances to prevent over-scaling
-│   │   │
-│   │   ├── Networking/                                 # Ensures the application's secure and efficient networking
-│   │   │   ├── VNetIntegration/                        # Securely integrates the app service with a virtual network
-│   │   │   │   └── SubnetConfiguration                 # Specifies the subnet within the VNet used by the app service
-│   │   │   └── ServiceEndpoints/                       # Service-specific endpoints for internal communication
-│   │   │       ├── DatabaseEndpoint                    # Endpoint for the database, ensuring secure access
-│   │   │       └── CacheEndpoint                       # Redis cache endpoint for session and data caching
 │   │   │
 │   │   └── BackupAndRestore/                           # Mechanisms to safeguard and recover application data
 │   │       ├── BackupSchedules/                        # Automated backup configuration to prevent data loss
@@ -57,38 +67,44 @@ KobraLocksAzureInfrastructure/
 │   │           └── PointInTimeRestore                  # Enables restoration of data to a specific point in time
 │   │
 │   └── KobraLocksFrontend/                             # ReactJS application providing the user interface
+│       ├── GeneralSettings/                            # Basic settings for the App Service
+│       │   ├── RuntimeStack: "Node LTS"                # Specify Node.js as the runtime for ReactJS applications
+│       │   ├── HttpsOnly: "Enabled"                    # Forces HTTPS traffic only for security
+│       │   ├── DeploymentSource: "GitHub/Bitbucket/GitLab" # Source control integration for CI/CD
+│       │   └── AutoHealingEnabled: "Enabled"           # Enables auto-healing to recover from platform faults
 │       ├── ContentDeliveryNetwork/                     # Utilizes CDN for enhanced global content delivery
 │       │   ├── EndpointConfigurations/                 # Configurations for CDN endpoints
-│       │   │   ├── Origin                              # Origin server settings, pointing to the App Service URL
-│       │   │   └── Optimizations                       # Settings to optimize content delivery, e.g., compression
+│       │   │   ├── Origin: "<AppServiceURL>"           # Origin server settings, pointing to the App Service URL
+│       │   │   └── Optimizations: {"Compression": true, "Caching": "Optimized"} # Compression and caching optimizations
 │       │   ├── CachingRules/                           # Defines what content is cached and for how long
-│       │   │   ├── StaticContent                       # Cache duration for static assets like CSS, JS, images
-│       │   │   └── DynamicContent                      # Settings for caching dynamic content, if applicable
+│       │   │   ├── StaticContent: "Cache duration for static assets like CSS, JS, images for 365 days"
+│       │   │   └── DynamicContent: "Use origin cache headers" # Follow cache headers from the origin for dynamic content
 │       │   └── CompressionSettings/                    # Configures content compression for faster delivery
-│       │       └── ContentTypes                        # Specifies which content types are eligible for compression
-│       │
+│       │       └── ContentTypes: ["text/html", "application/javascript", "text/css"] # Eligible content types for compression
 │       ├── CustomDomains/                              # Configures branded URLs for the application
-│       │   ├── DomainNameSetup/                        # Process for linking custom domain names
-│       │   │   └── Verification                        # Domain verification process to prove ownership
+│       │   ├── DomainNameSetup: "<yourcustomdomain.com>" # Custom domain name for the frontend
+│       │   │   └── Verification: "DNS verification method" # Verify domain ownership via DNS record
 │       │   └── DNSConfiguration/                       # Manages DNS records to direct traffic to the App Service
-│       │       ├── CNAME                               # CNAME record for domain aliasing
-│       │       └── ARecord                             # A record for pointing domain to App Service IP
-│       │
+│       │       ├── CNAME: "www.yourcustomdomain.com"   # CNAME record for www subdomain
+│       │       └── ARecord: "<AppServiceIPAddress>"    # A record pointing to App Service's IP address
 │       ├── SSLCertificates/                            # Manages SSL/TLS certificates for HTTPS encryption
-│       │   ├── CertificateRequests/                    # Process for requesting and validating new certificates
-│       │   │   └── Validation                          # Methods for certificate validation, e.g., DNS or email
-│       │   ├── Bindings/                               # Links SSL certificates to custom domains
-│       │   │   └── SNI                                 # Server Name Indication settings for certificate binding
-│       │   └── RenewalManagement/                      # Automated renewal processes to prevent certificate expiry
-│       │       └── AutoRenew                           # Enables automatic certificate renewal
-│       │
-│       └── DeploymentSlots/                            # Manages deployment environments for seamless updates
-│           ├── FeatureTestingSlot/                     # Dedicated environment for testing new features in isolation
-│           │   └── ConfigurationOverrides              # Slot-specific configurations, overriding production settings
-│           ├── A/BTestingSlot/                         # Allows a portion of users to experience new features
-│           │   └── TrafficWeight                        # Controls the percentage of traffic directed to this slot
-│           └── HotfixSlot/                             # Reserved environment for critical updates and fixes
-│               └── FastTrackDeployment                  # Configuration for rapid deployment to address issues
+│       │   ├── CertificateRequests: "<yourcustomdomain.com>" # Request SSL certificate for custom domain
+│       │   │   └── Validation: "Email validation"      # Validate certificate request via email verification
+│       │   ├── Bindings:                               # Bind SSL certificate to custom domain
+│       │   │   └── SNI: "Enabled"                      # Use Server Name Indication for SSL binding
+│       │   └── RenewalManagement:                      # Automated renewal process to prevent certificate expiry
+│       │       └── AutoRenew: "Enabled"                # Enable automatic certificate renewal
+│       ├── DeploymentSlots/                            # Manages deployment environments for seamless updates
+│       │   ├── FeatureTestingSlot:                     # Dedicated environment for testing new features
+│       │   │   └── ConfigurationOverrides: {"SomeFeatureFlag": true} # Enable feature flags for testing
+│       │   ├── A/BTestingSlot:                         # Environment for A/B testing with a portion of users
+│       │   │   └── TrafficWeight: "20%"                # 20% of traffic directed to A/B testing slot
+│       │   └── HotfixSlot:                             # Reserved environment for critical updates
+│       │       └── FastTrackDeployment: "Enabled"      # Enable rapid deployment for hotfixes
+│       └── Monitoring/                                 # Monitoring and diagnostics settings
+│           ├── ApplicationInsights: "Enabled"          # Enable Application Insights for performance monitoring
+│           ├── DetailedErrorMessages: "Enabled"        # Enable detailed error messages for diagnostics
+│           └── FailedRequestTracing: "Enabled"         # Enable tracing for failed requests to identify issues
 │
 ├── KubernetesServices/
 │   ├── KobraLocksCluster/                              # Centralized Kubernetes cluster for microservices management
@@ -275,15 +291,65 @@ KobraLocksAzureInfrastructure/
 │           └── Schedule: DailyAtMidnight             # Snapshots are taken daily at midnight to minimize disruption
 │
 ├── Networking/
-│   ├── VirtualNetwork/                               # The foundational backbone for private networking in Azure
-│   │   ├── Subnets/
-│   │   │   ├── AKSSubnet/                            # Dedicated to Azure Kubernetes Service cluster nodes
-│   │   │   │   └── CIDR: "10.240.0.0/16"             # Defines the IP range for AKS node communication
-│   │   │   └── AppServiceSubnet/                     # Isolates App Services for enhanced security
-│   │   │       └── CIDR: "10.241.0.0/16"             # Reserved IP range for App Service environments
-│   │   │
-│   │   └── Peering/                                  # Facilitates secure interconnection between VNets
-│   │       └── PeeredVNets: ["VNet1", "VNet2"]       # Lists VNets that are interconnected with the main VNet
+│   ├── VirtualNetworks/
+│   │   ├── KobraLocksMainVnet/
+│   │   │   ├── Address Space: "10.0.0.0/16"
+│   │   │   ├── DNS Servers: Azure-provided
+│   │   │   ├── Subnets/
+│   │   │   │   ├── AppServiceSubnet/
+│   │   │   │   │   ├── Range: "10.0.0.0/24"
+│   │   │   │   │   ├── ServiceEndpoints/
+│   │   │   │   │   │   └── Microsoft.Sql
+│   │   │   │   │   ├── Network Security Group: AppServicesNSG
+│   │   │   │   │   ├── Route Table: AppServiceRouteTable (with necessary routes configured)
+│   │   │   │   │   └── VNet Integration: Enabled for KobraLocksBackend and KobraLocksFrontend
+│   │   │   │   ├── DatabaseSubnet/
+│   │   │   │   │   ├── Range: "10.0.1.0/24"
+│   │   │   │   │   ├── ServiceEndpoints/
+│   │   │   │   │   │   └── Microsoft.Sql
+│   │   │   │   │   ├── Network Security Group: DatabaseNSG
+│   │   │   │   │   └── Route Table: DatabaseRouteTable (with necessary routes configured)
+│   │   │   │   ├── AksSubnet/
+│   │   │   │   │   ├── Range: "10.0.2.0/24"
+│   │   │   │   │   ├── ServiceEndpoints: Not required
+│   │   │   │   │   └── Network Security Group: AKSNSG
+│   │   │   │   └── PrivateEndpointSubnet/    # Subnet dedicated to Azure Private Endpoints
+│   │   │   │       ├── Range: "10.0.3.0/24"   # Non-overlapping CIDR block within VNet address space
+│   │   │   │       └── ServiceEndpoints/     # Generally, Private Endpoints do not require service endpoints
+│   │   │   │           └── None so far
+│   │   │   ├── Peering/
+│   │   │   │   ├── PeeringWithKobraLocksDRVnet/
+│   │   │   │   │   ├── Name: "MainToDRPeering"
+│   │   │   │   │   └── Settings: [AllowVirtualNetworkAccess: true, AllowForwardedTraffic: true, AllowGatewayTransit: false, UseRemoteGateways: false]
+│   │   │   │   └── PeeringWithOtherVnets (if necessary)
+│   │   │   ├── DDoS Protection: Standard (Optional)
+│   │   │   ├── Firewall: Configured with Application Rules and Network Rules (as required)
+│   │   │   ├── Microsoft Defender for Cloud: Enabled
+│   │   │   ├── Private Endpoints: Configured for databases and storage accounts
+│   │   │   └── Locks: Applied to critical resources to prevent accidental deletion or modification
+│   │   └── KobraLocksDRVnet/
+│   │       ├── Address Space: "10.1.0.0/16"
+│   │       ├── Subnets: Configured as needed for disaster recovery
+│   │       ├── Bastion: Configured for secure RDP/SSH access to VMs
+│   │       └── Peering/
+│   │           ├── PeeringWithKobraLocksMainVnet/
+│   │           │   ├── Name: "DRToMainPeering"
+│   │           │   └── Settings: [AllowVirtualNetworkAccess: true, AllowForwardedTraffic: true, AllowGatewayTransit: false, UseRemoteGateways: false]
+│   │           └── PeeringWithOtherVnets (if necessary)
+│   ├── PrivateDNSZones/
+│   │   ├── postgresql.database.azure.com/
+│   │   │   ├── RecordSets/
+│   │   │   │   └── dev-postgre-east-us
+│   │   │   │       ├── Type: A
+│   │   │   │       └── IP Address: <PostgreSQL Server IP>
+│   │   │   ├── LinkToMainVnet: KobraLocksMainVnet-PostgreSQL-DNS-Link
+│   │   │   └── LinkToDrvnet: KobraLocksDRVnet-PostgreSQL-DNS-Link
+│   │   └── privatelink.blob.core.windows.net/
+│   │       ├── RecordSets/
+│   │       │   └── blobstorage
+│   │       │       ├── Type: CNAME
+│   │       │       └── Alias: <Blob Storage Account Private Endpoint Alias>
+│   │       └── LinkToMainVnet: KobraLocksMainVnet-BlobStorage-DNS-Link
 │   │
 │   ├── ApplicationGateway/                           # Provides advanced HTTP-based load balancing and WAF
 │   │   ├── BackendPools/
@@ -298,15 +364,83 @@ KobraLocksAzureInfrastructure/
 │   │       ├── Rules: CustomRuleSet                  # Defines custom rules tailored to application requirements
 │   │       └── ManagedRules: OWASP Top 10            # Employs pre-defined rulesets targeting top web threats
 │   │
-│   └── NetworkSecurityGroups/                        # Applies fine-grained control over network traffic
-│       ├── NSGs/
-│       │   ├── AKSNSG/                               # Enforces security rules for traffic to/from AKS nodes
-│       │   │   └── Rules: ["AllowInboundHTTP", "DenyAllOutbound"]
-│       │   └── AppServicesNSG/                       # Regulates access to and from Azure App Services
-│       │       └── Rules: ["AllowInboundHTTPS", "AllowSQLAccess"]
-│       │
-│       └── FlowLogs/                                 # Monitors and records network traffic flow data
-│           └── StorageLocation: "flowlogsstorageacc" # Designates the storage account for flow log data
+│   └── NetworkSecurityGroups/
+│       ├── AppServicesNSG/
+│       │   └── Rules:
+│       │       ├── AllowHTTPS
+│       │       │   ├── Priority: 100
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 443
+│       │       │   ├── Source: Any
+│       │       │   ├── Destination: VirtualNetwork
+│       │       │   └── Service: HTTPS
+│       │       └── DenyAllOutbound
+│       │           ├── Priority: 200
+│       │           ├── Direction: Outbound
+│       │           ├── Access: Deny
+│       │           ├── Protocol: Any
+│       │           ├── Source Port Range: *
+│       │           ├── Destination Port Range: *
+│       │           ├── Source: VirtualNetwork
+│       │           ├── Destination: Internet
+│       │           └── Service: Custom
+│       ├── DatabaseNSG/
+│       │   └── Rules:
+│       │       ├── AllowVnetInbound
+│       │       │   ├── Priority: 100
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 5432
+│       │       │   ├── Source: VirtualNetwork
+│       │       │   ├── Destination: VirtualNetwork
+│       │       │   └── Service: PostgreSQL
+│       │       └── DenyAllOutbound
+│       │           ├── Priority: 200
+│       │           ├── Direction: Outbound
+│       │           ├── Access: Deny
+│       │           ├── Protocol: Any
+│       │           ├── Source Port Range: *
+│       │           ├── Destination Port Range: *
+│       │           ├── Source: VirtualNetwork
+│       │           ├── Destination: Internet
+│       │           └── Service: Custom
+│       └── AKSNSG/
+│           └── Rules:
+│               ├── AllowAKSToAppServices
+│               │   ├── Priority: 100
+│               │   ├── Direction: Inbound
+│               │   ├── Access: Allow
+│               │   ├── Protocol: TCP
+│               │   ├── Source Port Range: *
+│               │   ├── Destination Port Range: 443
+│               │   ├── Source: VirtualNetwork
+│               │   ├── Destination: VirtualNetwork
+│               │   └── Service: HTTPS
+│               ├── AllowAKSToDatabase
+│               │   ├── Priority: 110
+│               │   ├── Direction: Inbound
+│               │   ├── Access: Allow
+│               │   ├── Protocol: TCP
+│               │   ├── Source Port Range: *
+│               │   ├── Destination Port Range: 5432
+│               │   ├── Source: VirtualNetwork
+│               │   ├── Destination: VirtualNetwork
+│               │   └── Service: PostgreSQL
+│               └── DenyAllOutbound
+│                   ├── Priority: 200
+│                   ├── Direction: Outbound
+│                   ├── Access: Deny
+│                   ├── Protocol: Any
+│                   ├── Source Port Range: *
+│                   ├── Destination Port Range: *
+│                   ├── Source: VirtualNetwork
+│                   ├── Destination: Internet
+│                   └── Service: Custom
 │
 ├── IdentityAndAccess/                          # Centralized access management to secure resources
 │   ├── AzureActiveDirectory/                   # Azure AD for comprehensive identity and access management

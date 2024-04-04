@@ -60,6 +60,19 @@ KobraLocksAzureInfrastructure/
 │   │       │       └── Alias: <Blob Storage Account Private Endpoint Alias>
 │   │       └── LinkToMainVnet: KobraLocksMainVnet-BlobStorage-DNS-Link
 │   │
+│   ├── ApplicationGateway/                           # Provides advanced HTTP-based load balancing and WAF
+│   │   ├── BackendPools/
+│   │   │   ├── BackendAPI/                           # Routes traffic to the backend API services
+│   │   │   └── FrontendApp/                          # Directs client requests to the frontend application
+│   │   ├── RoutingRules/
+│   │   │   └── PathBasedRules/                       # Distributes traffic based on URL paths
+│   │   │       ├── APIRule: "/api/*"                 # Routes API requests to the BackendAPI pool
+│   │   │       └── AppRule: "/*"                     # Default rule routes to the FrontendApp pool
+│   │   │
+│   │   └── WAFConfig/                                # Protects against common web vulnerabilities
+│   │       ├── Rules: CustomRuleSet                  # Defines custom rules tailored to application requirements
+│   │       └── ManagedRules: OWASP Top 10            # Employs pre-defined rulesets targeting top web threats
+│   │
 │   └── NetworkSecurityGroups/
 │       ├── AppServicesNSG/
 │       │   └── Rules:
