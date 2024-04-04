@@ -22,10 +22,15 @@ KobraLocksAzureInfrastructure/
 │   │   │   │   │   ├── Range: "10.0.2.0/24"
 │   │   │   │   │   ├── ServiceEndpoints: Not required
 │   │   │   │   │   └── Network Security Group: AKSNSG
-│   │   │   │   └── PrivateEndpointSubnet/    # Subnet dedicated to Azure Private Endpoints
-│   │   │   │       ├── Range: "10.0.3.0/24"   # Non-overlapping CIDR block within VNet address space
-│   │   │   │       └── ServiceEndpoints/     # Generally, Private Endpoints do not require service endpoints
-│   │   │   │           └── None so far
+│   │   │   │   ├── PrivateEndpointSubnet/    # Subnet dedicated to Azure Private Endpoints
+│   │   │   │   │   ├── Range: "10.0.3.0/24"   # Non-overlapping CIDR block within VNet address space
+│   │   │   │   │   └── ServiceEndpoints/     # Generally, Private Endpoints do not require service endpoints
+│   │   │   │   │       └── None so far
+│   │   │   │   └── AppGatewaySubnet/                # Dedicated subnet for Application Gateway
+│   │   │   │       ├── Range: "10.0.4.0/24"          # Define an appropriate CIDR block
+│   │   │   │ 		├── Network Security Group: AppServicesNSG
+│   │   │   │       └── ServiceEndpoints/             # Service endpoints are typically not required for App Gateway subnet
+│   │   │   │           └── None required
 │   │   │   ├── Peering/
 │   │   │   │   ├── PeeringWithKobraLocksDRVnet/
 │   │   │   │   │   ├── Name: "MainToDRPeering"
@@ -149,38 +154,89 @@ KobraLocksAzureInfrastructure/
 │       │           ├── Source: VirtualNetwork
 │       │           ├── Destination: Internet
 │       │           └── Service: Custom
-│       └── AKSNSG/
+│       ├── AKSNSG/
+│       │   └── Rules:
+│       │       ├── AllowAKSToAppServices
+│       │       │   ├── Priority: 100
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 443
+│       │       │   ├── Source: VirtualNetwork
+│       │       │   ├── Destination: VirtualNetwork
+│       │       │   └── Service: HTTPS
+│       │       ├── AllowAKSToDatabase
+│       │       │   ├── Priority: 110
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 5432
+│       │       │   ├── Source: VirtualNetwork
+│       │       │   ├── Destination: VirtualNetwork
+│       │       │   └── Service: PostgreSQL
+│       │       └── DenyAllOutbound
+│       │           ├── Priority: 200
+│       │           ├── Direction: Outbound
+│       │           ├── Access: Deny
+│       │           ├── Protocol: Any
+│       │           ├── Source Port Range: *
+│       │           ├── Destination Port Range: *
+│       │           ├── Source: VirtualNetwork
+│       │           ├── Destination: Internet
+│       │           └── Service: Custom
+│       ├── AppGatewayNSG/
+│       │   └── Rules:
+│       │       ├── AllowHTTPandHTTPSInbound
+│       │       │   ├── Priority: 100
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 80,443
+│       │       │   ├── Source: Any
+│       │       │   └── Destination: Any
+│       │       └── DenyAllOutbound
+│       │           ├── Priority: 200
+│       │           ├── Direction: Outbound
+│       │           ├── Access: Deny
+│       │           ├── Protocol: Any
+│       │           ├── Source Port Range: *
+│		│			├── Service: Custom
+│       │           └── Destination Port Range: *
+│       └── PrivateEndpointsNSG/                      # Dedicated NSG for PrivateEndpointSubnet
 │           └── Rules:
-│               ├── AllowAKSToAppServices
+│               ├── AllowPrivateEndpointTraffic
 │               │   ├── Priority: 100
 │               │   ├── Direction: Inbound
 │               │   ├── Access: Allow
 │               │   ├── Protocol: TCP
 │               │   ├── Source Port Range: *
-│               │   ├── Destination Port Range: 443
-│               │   ├── Source: VirtualNetwork
-│               │   ├── Destination: VirtualNetwork
-│               │   └── Service: HTTPS
-│               ├── AllowAKSToDatabase
+│               │   ├── Destination Port Range: *
+│               │   ├── Source: VirtualNetwork, ServiceTag (AzurePrivateLink)
+│               │   └── Destination: VirtualNetwork
+│               │   └── Service: Custom               # Since it covers a wide range of Azure services
+│               ├── AllowAzureLoadBalancerInbound
 │               │   ├── Priority: 110
 │               │   ├── Direction: Inbound
 │               │   ├── Access: Allow
 │               │   ├── Protocol: TCP
 │               │   ├── Source Port Range: *
-│               │   ├── Destination Port Range: 5432
-│               │   ├── Source: VirtualNetwork
-│               │   ├── Destination: VirtualNetwork
-│               │   └── Service: PostgreSQL
-│               └── DenyAllOutbound
+│               │   ├── Destination Port Range: *
+│               │   ├── Source: AzureLoadBalancer     # Specifically allowing Azure Load Balancer
+│               │   └── Destination: VirtualNetwork
+│               │   └── Service: Custom               # Allowing Azure Load Balancer to access VNet
+│               └── DenyAllNonVNetTraffic
 │                   ├── Priority: 200
-│                   ├── Direction: Outbound
+│                   ├── Direction: Inbound
 │                   ├── Access: Deny
-│                   ├── Protocol: Any
+│                   ├── Protocol: TCP
 │                   ├── Source Port Range: *
 │                   ├── Destination Port Range: *
-│                   ├── Source: VirtualNetwork
-│                   ├── Destination: Internet
-│                   └── Service: Custom
+│                   ├── Source: Any (excluding VirtualNetwork, AzurePrivateLink ServiceTags)
+│                   └── Destination: Any
+│                   └── Service: Custom               # This rule ensures that only VNet and Private Link traffic is allowed
 │
 ├── AppServices/
 │   ├── KobraLocksBackend/
