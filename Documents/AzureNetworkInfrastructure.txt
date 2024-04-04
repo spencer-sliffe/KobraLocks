@@ -197,6 +197,15 @@ KobraLocksAzureInfrastructure/
 │       │       │   ├── Destination Port Range: 80,443
 │       │       │   ├── Source: Any
 │       │       │   └── Destination: Any
+│       │       ├── AllowAppGatewayRequiredPorts
+│       │       │   ├── Priority: 110
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 65200-65535
+│       │       │   ├── Source: Any
+│       │       │   └── Destination: Any
 │       │       └── DenyAllOutbound
 │       │           ├── Priority: 200
 │       │           ├── Direction: Outbound

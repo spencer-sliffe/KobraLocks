@@ -440,6 +440,66 @@ KobraLocksAzureInfrastructure/
 │       │           ├── Source: VirtualNetwork
 │       │           ├── Destination: Internet
 │       │           └── Service: Custom
+│       ├── AppGatewayNSG/
+│       │   └── Rules:
+│       │       ├── AllowHTTPandHTTPSInbound
+│       │       │   ├── Priority: 100
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 80,443
+│       │       │   ├── Source: Any
+│       │       │   └── Destination: Any
+│       │       ├── AllowAppGatewayRequiredPorts
+│       │       │   ├── Priority: 110
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: 65200-65535
+│       │       │   ├── Source: Any
+│       │       │   └── Destination: Any
+│       │       └── DenyAllOutbound
+│       │           ├── Priority: 200
+│       │           ├── Direction: Outbound
+│       │           ├── Access: Deny
+│       │           ├── Protocol: Any
+│       │           ├── Source Port Range: *
+│		│			├── Service: Custom
+│       │           └── Destination Port Range: *
+│       ├── PrivateEndpointsNSG/                      # Dedicated NSG for PrivateEndpointSubnet
+│       │   └── Rules:
+│       │       ├── AllowPrivateEndpointTraffic
+│       │       │   ├── Priority: 100
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: *
+│       │       │   ├── Source: VirtualNetwork, ServiceTag (AzurePrivateLink)
+│       │       │   └── Destination: VirtualNetwork
+│       │       │   └── Service: Custom               # Since it covers a wide range of Azure services
+│       │       ├── AllowAzureLoadBalancerInbound
+│       │       │   ├── Priority: 110
+│       │       │   ├── Direction: Inbound
+│       │       │   ├── Access: Allow
+│       │       │   ├── Protocol: TCP
+│       │       │   ├── Source Port Range: *
+│       │       │   ├── Destination Port Range: *
+│       │       │   ├── Source: AzureLoadBalancer     # Specifically allowing Azure Load Balancer
+│       │       │   └── Destination: VirtualNetwork
+│       │       │   └── Service: Custom               # Allowing Azure Load Balancer to access VNet
+│       │       └── DenyAllNonVNetTraffic
+│       │           ├── Priority: 200
+│       │           ├── Direction: Inbound
+│       │           ├── Access: Deny
+│       │           ├── Protocol: TCP
+│       │           ├── Source Port Range: *
+│       │           ├── Destination Port Range: *
+│       │           ├── Source: Any (excluding VirtualNetwork, AzurePrivateLink ServiceTags)
+│       │           ├── Destination: Any
+│       │           └── Service: Custom               # This rule ensures that only VNet and Private Link traffic is allowed
 │       └── AKSNSG/
 │           └── Rules:
 │               ├── AllowAKSToAppServices
