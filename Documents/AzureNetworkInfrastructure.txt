@@ -60,18 +60,49 @@ KobraLocksAzureInfrastructure/
 │   │       │       └── Alias: <Blob Storage Account Private Endpoint Alias>
 │   │       └── LinkToMainVnet: KobraLocksMainVnet-BlobStorage-DNS-Link
 │   │
-│   ├── ApplicationGateway/                           # Provides advanced HTTP-based load balancing and WAF
-│   │   ├── BackendPools/
-│   │   │   ├── BackendAPI/                           # Routes traffic to the backend API services
-│   │   │   └── FrontendApp/                          # Directs client requests to the frontend application
-│   │   ├── RoutingRules/
-│   │   │   └── PathBasedRules/                       # Distributes traffic based on URL paths
-│   │   │       ├── APIRule: "/api/*"                 # Routes API requests to the BackendAPI pool
-│   │   │       └── AppRule: "/*"                     # Default rule routes to the FrontendApp pool
-│   │   │
-│   │   └── WAFConfig/                                # Protects against common web vulnerabilities
-│   │       ├── Rules: CustomRuleSet                  # Defines custom rules tailored to application requirements
-│   │       └── ManagedRules: OWASP Top 10            # Employs pre-defined rulesets targeting top web threats
+│   ├── ApplicationGateway/                            # Provides advanced HTTP-based load balancing and WAF
+│   │   ├── GeneralSettings/                           # Basic configuration for Application Gateway
+│   │   │   ├── SKU: "WAF_v2"                          # Use WAF_v2 for enhanced performance and WAF features
+│   │   │   ├── Autoscale: "Enabled"                   # Enable autoscaling for demand-based performance
+│   │   │   ├── InstanceCount: "2-10"                  # Minimum and maximum instance count for autoscaling
+│   │   │   └── Http2: "Enabled"                       # Enable HTTP/2 for improved performance
+│   │   ├── BackendPools/                              # Backend targets for routing traffic
+│   │   │   ├── BackendAPI/                            # Routes traffic to the backend API services
+│   │   │   │   └── Targets: ["<BackendAPIAppServiceURL>"] # URLs of backend API services
+│   │   │   └── FrontendApp/                           # Directs client requests to the frontend application
+│   │   │       └── Targets: ["<FrontendAppServiceURL>"]   # URLs of frontend App Service
+│   │   ├── HttpListeners/                             # Listener configurations for incoming traffic
+│   │   │   ├── FrontendHttpsListener/                 # HTTPS listener for secure traffic
+│   │   │   │   ├── Protocol: "HTTPS"
+│   │   │   │   ├── Port: 443
+│   │   │   │   └── CustomDomain: "<yourcustomdomain.com>" # Custom domain for the listener
+│   │   │   └── SslCertificate:                        # SSL certificate for HTTPS listener
+│   │   │       └── Name: "FrontendAppSslCert"
+│   │   ├── RoutingRules/                              # Defines how traffic is routed to backend pools
+│   │   │   ├── PathBasedRules/                        # Use path-based routing for directing traffic
+│   │   │   │   ├── APIRule:                           # Rule for API traffic
+│   │   │   │   │   ├── PathPattern: "/api/*"
+│   │   │   │   │   ├── BackendPool: "BackendAPI"
+│   │   │   │   │   └── HttpListener: "FrontendHttpsListener"
+│   │   │   │   └── AppRule:                           # Rule for frontend app traffic
+│   │   │   │       ├── PathPattern: "/*"
+│   │   │   │       ├── BackendPool: "FrontendApp"
+│   │   │   │       └── HttpListener: "FrontendHttpsListener"
+│   │   │   └── DefaultRoute:                          # Default route if no rule matches
+│   │   │       ├── BackendPool: "FrontendApp"
+│   │   │       └── HttpListener: "FrontendHttpsListener"
+│   │   └── WAFConfig/                                 # Web Application Firewall configurations
+│   │       ├── Enabled: "True"
+│   │       ├── Mode: "Prevention"                     # Set WAF to actively prevent detected threats
+│   │       ├── RuleSetVersion: "OWASP 3.1"            # Specify OWASP rule set version
+│   │       ├── ManagedRules:                          # Employs pre-defined rulesets for common web threats
+│   │       │   └── RuleGroups: ["OWASP Top 10"]
+│   │       └── CustomRules:                           # Define custom rules for specific requirements
+│   │           └── Name: "BlockSpecificUserAgents"
+│   │               ├── Priority: 100
+│   │               ├── RuleType: "MatchRule"
+│   │               ├── MatchConditions: [{"MatchVariables": "RequestHeaders", "Operator": "Contains", "MatchValues": ["BadBot"]}]
+│   │               └── Action: "Block"
 │   │
 │   └── NetworkSecurityGroups/
 │       ├── AppServicesNSG/
