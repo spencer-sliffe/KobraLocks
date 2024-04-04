@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python version
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v1
         with:
           python-version: '3.12'
 
@@ -28,7 +28,7 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: pip install --no-cache-dir -r requirements.txt
+        run: pip install -r requirements.txt
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
@@ -65,9 +65,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A28DBD33001C478FA27241AACCBCE826 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_87A615EA65DD4BFC8859C9DB36935EA6 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7DACFEADD72F45C2BC234BBC02AD85CF }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_81ADF4A8FAC04B22AC7173D495FBE454 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_21A2F610A3AE475981F997D32DC79FDC }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_93E15F21C6374EB0924D74491BCB42D4 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
