@@ -35,3 +35,6 @@ pip install -r requirements.txt
 RUN SERVER:
 python manage.py runserver
 	The server will start on http://127.0.0.1:8000/. The admin panel can be accessed at http://127.0.0.1:8000/admin.
+
+
+Testing
