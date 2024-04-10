@@ -1,0 +1,260 @@
+KobraLocksAzureInfrastructure/
+└─── Networking/
+    ├── VirtualNetworks/
+    │   ├── KobraLocksMainVnet/
+    │   │   ├── Address Space: "10.0.0.0/16"
+    │   │   ├── DNS Servers: Azure-provided
+    │   │   ├── Subnets/
+    │   │   │   ├── AppServiceSubnet/
+    │   │   │   │   ├── Range: "10.0.0.0/24"
+    │   │   │   │   ├── ServiceEndpoints/
+    │   │   │   │   │   └── Microsoft.Sql
+    │   │   │   │   ├── Network Security Group: AppServicesNSG
+    │   │   │   │   ├── Route Table: AppServiceRouteTable (with necessary routes configured)
+    │   │   │   │   └── VNet Integration: Enabled for KobraLocksBackend and KobraLocksFrontend
+    │   │   │   ├── DatabaseSubnet/
+    │   │   │   │   ├── Range: "10.0.1.0/24"
+    │   │   │   │   ├── ServiceEndpoints/
+    │   │   │   │   │   └── Microsoft.Sql
+    │   │   │   │   ├── Network Security Group: DatabaseNSG
+    │   │   │   │   └── Route Table: DatabaseRouteTable (with necessary routes configured)
+    │   │   │   ├── AksSubnet/
+    │   │   │   │   ├── Range: "10.0.2.0/24"
+    │   │   │   │   ├── ServiceEndpoints: Not required
+    │   │   │   │   └── Network Security Group: AKSNSG
+    │   │   │   ├── PrivateEndpointSubnet/    # Subnet dedicated to Azure Private Endpoints
+    │   │   │   │   ├── Range: "10.0.3.0/24"   # Non-overlapping CIDR block within VNet address space
+    │   │   │   │   └── ServiceEndpoints/     # Generally, Private Endpoints do not require service endpoints
+    │   │   │   │       └── None so far
+    │   │   │   └── AppGatewaySubnet/                # Dedicated subnet for Application Gateway
+    │   │   │       ├── Range: "10.0.4.0/24"          # Define an appropriate CIDR block
+    │   │   │ 		├── Network Security Group: AppServicesNSG
+    │   │   │       └── ServiceEndpoints/             # Service endpoints are typically not required for App Gateway subnet
+    │   │   │           └── None required
+    │   │   ├── Peering/
+    │   │   │   ├── PeeringWithKobraLocksDRVnet/
+    │   │   │   │   ├── Name: "MainToDRPeering"
+    │   │   │   │   └── Settings: [AllowVirtualNetworkAccess: true, AllowForwardedTraffic: true, AllowGatewayTransit: false, UseRemoteGateways: false]
+    │   │   │   └── PeeringWithOtherVnets (if necessary)
+    │   │   ├── DDoS Protection: Standard (Optional)
+    │   │   ├── Firewall: Configured with Application Rules and Network Rules (as required)
+    │   │   ├── Microsoft Defender for Cloud: Enabled
+    │   │   ├── Private Endpoints: Configured for databases and storage accounts
+    │   │   └── Locks: Applied to critical resources to prevent accidental deletion or modification
+    │   └── KobraLocksDRVnet/
+    │       ├── Address Space: "10.1.0.0/16"
+    │       ├── Subnets: Configured as needed for disaster recovery
+    │       ├── Bastion: Configured for secure RDP/SSH access to VMs
+    │       └── Peering/
+    │           ├── PeeringWithKobraLocksMainVnet/
+    │           │   ├── Name: "DRToMainPeering"
+    │           │   └── Settings: [AllowVirtualNetworkAccess: true, AllowForwardedTraffic: true, AllowGatewayTransit: false, UseRemoteGateways: false]
+    │           └── PeeringWithOtherVnets (if necessary)
+    ├── PrivateDNSZones/
+    │   ├── postgresql.database.azure.com/
+    │   │   ├── RecordSets/
+    │   │   │   └── dev-postgre-east-us
+    │   │   │       ├── Type: A
+    │   │   │       └── IP Address: <PostgreSQL Server IP>
+    │   │   ├── LinkToMainVnet: KobraLocksMainVnet-PostgreSQL-DNS-Link
+    │   │   └── LinkToDrvnet: KobraLocksDRVnet-PostgreSQL-DNS-Link
+    │   └── privatelink.blob.core.windows.net/
+    │       ├── RecordSets/
+    │       │   └── blobstorage
+    │       │       ├── Type: CNAME
+    │       │       └── Alias: <Blob Storage Account Private Endpoint Alias>
+    │       └── LinkToMainVnet: KobraLocksMainVnet-BlobStorage-DNS-Link
+    │
+    ├── ApplicationGateway/
+    │   └── WAFPolicy/                                      # WAF Policy for securing KobraLocks Application Gateway
+    │       ├── PolicySettings/
+    │       │   ├── Enabled: true                           # Enable the WAF to actively filter traffic
+    │       │   ├── Mode: Prevention                        # Set to Prevention mode to block detected threats
+    │       │   ├── RequestSizeLimit: 128                   # Max request body size limit in KB (adjust as needed)
+    │       │   ├── MaxRequestBodySize: 32                  # Max request body size for file uploads in MB (adjust as needed)
+    │       │   ├── FileUploadLimit: 100                    # Max size of file uploads in MB (adjust as needed)
+    │       │   └── RequestBodyCheck: true                  # Inspect the request body for common exploits
+    │       ├── CustomRules/
+    │       │   ├── Rule1/                                  # Custom rule for SQL Injection protection
+    │       │   │   ├── Name: "PreventSQLInjection"
+    │       │   │   ├── Priority: 1
+    │       │   │   ├── RuleType: "MatchRule"
+    │       │   │   ├── MatchConditions/
+    │       │   │   │   ├── MatchVariables: "QueryString", "PostArgs"
+    │       │   │   │   ├── Operator: "Contains"
+    │       │   │   │   ├── Negate: false
+    │       │   │   │   └── MatchValues: ["select", "insert", "update", "delete", "exec", "execute"]
+    │       │   │   └── Action: "Block"
+    │       │   ├── Rule2/                                  # Custom rule for Cross-Site Scripting (XSS) protection
+    │       │   │   ├── Name: "PreventXSSAttack"
+    │       │   │   ├── Priority: 2
+    │       │   │   ├── RuleType: "MatchRule"
+    │       │   │   ├── MatchConditions/
+    │       │   │   │   ├── MatchVariables: "QueryString", "PostArgs"
+    │       │   │   │   ├── Operator: "Contains"
+    │       │   │   │   ├── Negate: false
+    │       │   │   │   └── MatchValues: ["<script", "onerror", "onload", "alert(", "document.cookie"]
+    │       │   │   └── Action: "Block"
+    │       │   └── Rule3/                                  # Custom rule for blocking traffic from malicious user agents
+    │       │       ├── Name: "BlockMaliciousUserAgents"
+    │       │       ├── Priority: 3
+    │       │       ├── RuleType: "MatchRule"
+    │       │       ├── MatchConditions/
+    │       │       │   ├── MatchVariables: "RequestHeaders", "UserAgent"
+    │       │       │   ├── Operator: "Contains"
+    │       │       │   ├── Negate: false
+    │       │       │   └── MatchValues: ["BadBot", "Malicious"]
+    │       │       └── Action: "Block"
+    │       └── ManagedRules/
+    │           ├── RuleSet1/                               # Utilizing the OWASP Core Rule Set
+    │           │   ├── RuleSetType: "OWASP"
+    │           │   ├── RuleSetVersion: "3.2"               # Latest version at the time of creation
+    │           │   └── RuleGroupOverrides/
+    │           │       ├── SQLi/                           # Adjusting the SQL injection rule group
+    │           │       │   └── State: "Enabled"
+    │           │       ├── XSS/                            # Adjusting the XSS rule group
+    │           │       │   └── State: "Enabled"
+    │           │       └── LFI/                            # Adjusting the Local File Inclusion rule group
+    │           │           └── State: "Enabled"
+    │           └── AnomalyScoring/                         # Enabling anomaly scoring for aggregated risk scoring
+    │               ├── AnomalyScoreThreshold: 5            # Setting a threshold for blocking requests
+    │               └── AnomalyMode: true                   # Enable the mode to aggregate scores
+    │
+    └── NetworkSecurityGroups/
+        ├── AppServicesNSG/
+        │   └── Rules:
+        │       ├── AllowHTTPS
+        │       │   ├── Priority: 100
+        │       │   ├── Direction: Inbound
+        │       │   ├── Access: Allow
+        │       │   ├── Protocol: TCP
+        │       │   ├── Source Port Range: *
+        │       │   ├── Destination Port Range: 443
+        │       │   ├── Source: Any
+        │       │   ├── Destination: VirtualNetwork
+        │       │   └── Service: HTTPS
+        │       └── DenyAllOutbound
+        │           ├── Priority: 200
+        │           ├── Direction: Outbound
+        │           ├── Access: Deny
+        │           ├── Protocol: Any
+        │           ├── Source Port Range: *
+        │           ├── Destination Port Range: *
+        │           ├── Source: VirtualNetwork
+        │           ├── Destination: Internet
+        │           └── Service: Custom
+        ├── DatabaseNSG/
+        │   └── Rules:
+        │       ├── AllowVnetInbound
+        │       │   ├── Priority: 100
+        │       │   ├── Direction: Inbound
+        │       │   ├── Access: Allow
+        │       │   ├── Protocol: TCP
+        │       │   ├── Source Port Range: *
+        │       │   ├── Destination Port Range: 5432
+        │       │   ├── Source: VirtualNetwork
+        │       │   ├── Destination: VirtualNetwork
+        │       │   └── Service: PostgreSQL
+        │       └── DenyAllOutbound
+        │           ├── Priority: 200
+        │           ├── Direction: Outbound
+        │           ├── Access: Deny
+        │           ├── Protocol: Any
+        │           ├── Source Port Range: *
+        │           ├── Destination Port Range: *
+        │           ├── Source: VirtualNetwork
+        │           ├── Destination: Internet
+        │           └── Service: Custom
+        ├── AKSNSG/
+        │   └── Rules:
+        │       ├── AllowAKSToAppServices
+        │       │   ├── Priority: 100
+        │       │   ├── Direction: Inbound
+        │       │   ├── Access: Allow
+        │       │   ├── Protocol: TCP
+        │       │   ├── Source Port Range: *
+        │       │   ├── Destination Port Range: 443
+        │       │   ├── Source: VirtualNetwork
+        │       │   ├── Destination: VirtualNetwork
+        │       │   └── Service: HTTPS
+        │       ├── AllowAKSToDatabase
+        │       │   ├── Priority: 110
+        │       │   ├── Direction: Inbound
+        │       │   ├── Access: Allow
+        │       │   ├── Protocol: TCP
+        │       │   ├── Source Port Range: *
+        │       │   ├── Destination Port Range: 5432
+        │       │   ├── Source: VirtualNetwork
+        │       │   ├── Destination: VirtualNetwork
+        │       │   └── Service: PostgreSQL
+        │       └── DenyAllOutbound
+        │           ├── Priority: 200
+        │           ├── Direction: Outbound
+        │           ├── Access: Deny
+        │           ├── Protocol: Any
+        │           ├── Source Port Range: *
+        │           ├── Destination Port Range: *
+        │           ├── Source: VirtualNetwork
+        │           ├── Destination: Internet
+        │           └── Service: Custom
+        ├── AppGatewayNSG/
+        │   └── Rules:
+        │       ├── AllowHTTPandHTTPSInbound
+        │       │   ├── Priority: 100
+        │       │   ├── Direction: Inbound
+        │       │   ├── Access: Allow
+        │       │   ├── Protocol: TCP
+        │       │   ├── Source Port Range: *
+        │       │   ├── Destination Port Range: 80,443
+        │       │   ├── Source: Any
+        │       │   └── Destination: Any
+        │       ├── AllowAppGatewayRequiredPorts
+        │       │   ├── Priority: 110
+        │       │   ├── Direction: Inbound
+        │       │   ├── Access: Allow
+        │       │   ├── Protocol: TCP
+        │       │   ├── Source Port Range: *
+        │       │   ├── Destination Port Range: 65200-65535
+        │       │   ├── Source: Any
+        │       │   └── Destination: Any
+        │       └── DenyAllOutbound
+        │           ├── Priority: 200
+        │           ├── Direction: Outbound
+        │           ├── Access: Deny
+        │           ├── Protocol: Any
+        │           ├── Source Port Range: *
+ 	│	    ├── Service: Custom
+        │           └── Destination Port Range: *
+        └── PrivateEndpointsNSG/                      # Dedicated NSG for PrivateEndpointSubnet
+            └── Rules:
+                ├── AllowPrivateEndpointTraffic
+                │   ├── Priority: 100
+                │   ├── Direction: Inbound
+                │   ├── Access: Allow
+                │   ├── Protocol: TCP
+                │   ├── Source Port Range: *
+                │   ├── Destination Port Range: *
+                │   ├── Source: VirtualNetwork, ServiceTag (AzurePrivateLink)
+                │   └── Destination: VirtualNetwork
+                │   └── Service: Custom               # Since it covers a wide range of Azure services
+                ├── AllowAzureLoadBalancerInbound
+                │   ├── Priority: 110
+                │   ├── Direction: Inbound
+                │   ├── Access: Allow
+                │   ├── Protocol: TCP
+                │   ├── Source Port Range: *
+                │   ├── Destination Port Range: *
+                │   ├── Source: AzureLoadBalancer     # Specifically allowing Azure Load Balancer
+                │   ├── Destination: VirtualNetwork
+                │   └── Service: Custom               # Allowing Azure Load Balancer to access VNet
+                └── DenyAllNonVNetTraffic
+                    ├── Priority: 200
+                    ├── Direction: Inbound
+                    ├── Access: Deny
+                    ├── Protocol: TCP
+                    ├── Source Port Range: *
+                    ├── Destination Port Range: *
+                    ├── Source: Any (excluding VirtualNetwork, AzurePrivateLink ServiceTags)
+                    ├── Destination: Any
+                    └── Service: Custom               # This rule ensures that only VNet and Private Link traffic is allowed
+
