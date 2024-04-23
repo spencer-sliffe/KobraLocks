@@ -32,7 +32,7 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          cp server.js ./build/
+          cp ./frontend-web/server.js ./build/
           zip -r release.zip ./build
         # Here we are specifying to zip the contents of frontend-web directory
 
