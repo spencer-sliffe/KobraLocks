@@ -31,7 +31,9 @@ jobs:
         # working-directory: ./frontend-web
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip ./frontend-web
+        run: |
+          cp server.js ./build/
+          zip -r release.zip ./build
         # Here we are specifying to zip the contents of frontend-web directory
 
       - name: Upload artifact for deployment job
@@ -71,5 +73,5 @@ jobs:
         with:
           app-name: 'KobraLocksFrontEnd'
           slot-name: 'Production'
-          package: './frontend-web'
+          package: './build'
           
