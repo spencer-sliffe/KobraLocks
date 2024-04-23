@@ -27,9 +27,12 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          cp ./frontend-web/server.js ./frontend-web/build/
-          zip -r release.zip ./frontend-web/build
-        # Here we are specifying to zip the contents of the build directory within frontend-web
+          # Copy server.js to the root of the frontend-web directory (not inside the build directory)
+          cp ./frontend-web/server.js ./
+          # Zip the build directory and server.js
+          zip -r release.zip ./frontend-web/build server.js
+        working-directory: ./
+        # Note: Adjust the zip command if the server.js file is not in the frontend-web directory
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3

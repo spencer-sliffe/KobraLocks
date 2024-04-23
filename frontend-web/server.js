@@ -11,6 +11,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// Use the environment variable provided by Azure, or 8080 if local
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Server is up on port ${port}!`);
