@@ -64,4 +64,4 @@ jobs:
           app-name: 'KobraLocksFrontEnd-Web'
           slot-name: 'production'
           package: deployment
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1234 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_77CAF60E9BEB4121A2C915FE333B9DB1 }}
