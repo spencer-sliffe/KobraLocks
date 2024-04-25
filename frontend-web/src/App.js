@@ -17,6 +17,14 @@ function App() {
         >
           Learn More
         </a>
+        <a
+          className="App-link"
+          href="https://kobrastocks.tech"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          KobraStocks
+        </a>
       </header>
     </div>
   );
