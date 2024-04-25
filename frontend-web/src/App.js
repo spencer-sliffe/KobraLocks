@@ -5,9 +5,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Welcome to Kobra Locks</h1>
+        <h1>Welcome to KobraLocks</h1>
         <p>
-          Your ultimate destination for sports betting insights is under construction.
+          Your ultimate destination for sports betting insights.
         </p>
         <a
           className="App-link"
@@ -17,18 +17,9 @@ function App() {
         >
           Learn More
         </a>
-        <a
-          className="App-link"
-          href="https://kobrastocks.tech"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          KobraStocks
-        </a>
       </header>
     </div>
   );
 }
 
 export default App;
-
