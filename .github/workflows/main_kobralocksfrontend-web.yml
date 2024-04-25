@@ -55,7 +55,7 @@ jobs:
       - name: Unzip artifact for deployment
         run: |
           mkdir -p deployment
-          unzip node-app -d deployment
+          unzip node-app.zip -d deployment
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
