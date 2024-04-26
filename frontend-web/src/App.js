@@ -50,6 +50,7 @@ function App() {
 
   return (
     <div className="App">
+      <a href="https://kobralocks.tech" className="static-link">kobralocks.tech</a>
       <header className="App-header">
         <h1>
           <Typewriter

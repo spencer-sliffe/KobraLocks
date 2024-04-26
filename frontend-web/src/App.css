@@ -50,3 +50,14 @@
 .button-key:hover {
   transform: scale(1.1); /* Slightly enlarge the button when hovered */
 }
+
+.static-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 12px; /* Small font size */
+  color: purple; /* Set the link color to purple */
+  text-decoration: none; /* Optional: removes underline from the link */
+  padding: 10px; /* Adds some padding around the link */
+  font-family: 'Courier New', monospace; /* Maintains the app's theme */
+}
