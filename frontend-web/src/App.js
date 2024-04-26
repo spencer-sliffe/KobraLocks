@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const Typewriter = ({ text, averageSpeed, onTypingDone, showCursor }) => {
+  const [currentArray, setCurrentArray] = useState([]);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [totalMistakesMade, setTotalMistakesMade] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
   const [blink, setBlink] = useState(true);
   const textArray = text.split('');
-  const [currentArray, setCurrentArray] = useState([]);
 
   useEffect(() => {
     let timer;
@@ -38,19 +38,20 @@ const Typewriter = ({ text, averageSpeed, onTypingDone, showCursor }) => {
       }
     };
 
-    timer = setTimeout(() => {
-      if (currentArray.length === textArray.length && totalMistakesMade === 3) {
-        onTypingDone(); // Typing complete
-      } else {
+    if (currentArray.length === textArray.length && totalMistakesMade === 3) {
+      onTypingDone(); // Typing complete
+    } else {
+      timer = setTimeout(() => {
         if (isTyping) {
           typeCharacter();
         } else {
           backspaceCharacter();
         }
-      }
-    }, averageSpeed);
+      }, averageSpeed);
+    }
 
     return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentArray, isTyping, mistakeCount, totalMistakesMade, onTypingDone]);
 
   useEffect(() => {
