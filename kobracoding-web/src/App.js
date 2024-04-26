@@ -75,7 +75,8 @@ function App() {
               <button className="button-key" onClick={() => window.location.href = 'https://kobrastocks.tech'}>KobraStocks.tech</button>
               <button className="button-key" onClick={() => window.location.href = 'https://kobralocks.tech'}>KobraLocks.tech</button>
               <button className="button-key" onClick={() => window.location.href = '/about'}>About Kobra</button>
-              <button className="button-key" onClick={() => window.location.href = '/signin'}>Sign in</button>
+              <button className="button-key" onClick={() => window.location.href = '/signin'}>Sign In</button>
+              <button className="button-key" onClick={() => window.location.href = '/signup'}>Sign Up</button>
             </div>
       </header>
 
