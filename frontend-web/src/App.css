@@ -35,3 +35,18 @@
     opacity: 0;
   }
 }
+
+.button-key {
+  background-color: #333; /* Dark grey background */
+  color: limegreen; /* Text color to match the terminal theme */
+  border: 2px solid limegreen; /* Border color to match the terminal text */
+  padding: 10px 20px;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.button-key:hover {
+  transform: scale(1.1); /* Slightly enlarge the button when hovered */
+}

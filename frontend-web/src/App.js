@@ -1,74 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const Typewriter = ({ text, averageSpeed, onTypingDone, showCursor }) => {
-  const [currentArray, setCurrentArray] = useState([]);
-  const [mistakeCount, setMistakeCount] = useState(0);
-  const [totalMistakesMade, setTotalMistakesMade] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
-  const [blink, setBlink] = useState(true);
-  const textArray = text.split('');
+function Typewriter({ text, averageSpeed, onTypingDone, showCursor }) {
+  const [index, setIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [mistakes, setMistakes] = useState(0);
+  const [backspacing, setBackspacing] = useState(false);
 
   useEffect(() => {
-    let timer;
-
-    const typeCharacter = () => {
-      if (currentArray.length < textArray.length && isTyping) {
-        if (Math.random() < 0.1 && totalMistakesMade < 3) {
-          // Simulate a mistake
-          setCurrentArray((prev) => prev.concat('_'));
-          setIsTyping(false);
-        } else {
-          setCurrentArray((prev) => prev.concat(textArray[currentArray.length]));
-        }
-      }
-    };
-
-    const backspaceCharacter = () => {
-      if (!isTyping) {
-        if (mistakeCount < 3) {
-          setCurrentArray((prev) => prev.slice(0, prev.length - 1));
-          setMistakeCount((prev) => prev + 1);
-        } else {
-          // End mistake sequence
-          setIsTyping(true);
-          setMistakeCount(0);
-          setTotalMistakesMade((prev) => prev + 1);
-        }
-      }
-    };
-
-    if (currentArray.length === textArray.length && totalMistakesMade === 3) {
-      onTypingDone(); // Typing complete
-    } else {
-      timer = setTimeout(() => {
-        if (isTyping) {
-          typeCharacter();
-        } else {
-          backspaceCharacter();
-        }
-      }, averageSpeed);
+    if (index === text.length && mistakes === 3) {
+      onTypingDone && onTypingDone();  // Ensure typing is done only after 3 mistakes are made
+      return;
     }
 
-    return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentArray, isTyping, mistakeCount, totalMistakesMade, onTypingDone]);
+    const timeout = setTimeout(() => {
+      if (backspacing) {
+        if (currentText.length > index) {
+          setCurrentText(currentText.slice(0, -1));  // Remove last character
+        } else {
+          setBackspacing(false);
+          setMistakes(m => m + 1);
+        }
+      } else {
+        if (index < text.length) {
+          if (Math.random() < 0.1 && mistakes < 3 && !backspacing) {
+            setCurrentText(currentText + '_');  // Simulate a mistake
+            setBackspacing(true);
+          } else {
+            setCurrentText(currentText + text.charAt(index));  // Type next character
+            setIndex(index + 1);
+          }
+        }
+      }
+    }, backspacing ? averageSpeed / 2 : averageSpeed);
 
-  useEffect(() => {
-    const blinkInterval = setInterval(() => {
-      setBlink((prev) => !prev);
-    }, 500);
-
-    return () => clearInterval(blinkInterval);
-  }, []);
+    return () => clearTimeout(timeout);
+  }, [currentText, index, backspacing, mistakes, text, averageSpeed, onTypingDone]);
 
   return (
     <span>
-      {currentArray.join('')}
-      {showCursor && <span className="typewriter-cursor" style={{ opacity: blink ? 1 : 0 }}>|</span>}
+      {currentText}
+      {showCursor && <span className="typewriter-cursor" style={{ opacity: 1 }}>|</span>}
     </span>
   );
-};
+}
 
 function App() {
   const [headerCompleted, setHeaderCompleted] = useState(false);
@@ -85,23 +60,23 @@ function App() {
           />
         </h1>
         {headerCompleted && (
-          <p>
-            <Typewriter
-              text="Your ultimate destination for sports betting insights."
-              averageSpeed={100}
-              showCursor={false}
-              onTypingDone={() => {}}
-            />
-          </p>
+          <div>
+            <p>
+              <Typewriter
+                text="Your ultimate destination for sports betting insights."
+                averageSpeed={100}
+                showCursor={false}
+                onTypingDone={() => console.log('Paragraph done')}
+              />
+            </p>
+            <div>
+              <button className="button-key" onClick={() => window.location.href = 'https://kobrastocks.tech'}>KobraStocks.tech</button>
+              <button className="button-key" onClick={() => window.location.href = 'https://kobracoding.tech'}>KobraCoding.tech</button>
+              <button className="button-key" onClick={() => window.location.href = '/about'}>About Kobra</button>
+              <button className="button-key" onClick={() => window.location.href = '/signin'}>Sign in</button>
+            </div>
+          </div>
         )}
-        <a
-          className="App-link"
-          href="https://kobralocks.tech"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn More
-        </a>
       </header>
     </div>
   );
