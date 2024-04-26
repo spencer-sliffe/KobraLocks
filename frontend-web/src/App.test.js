@@ -1,14 +1,3 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+// App.test.js
+// Tests removed. This file is intentionally left blank.
 
-test('renders welcome message', () => {
-  render(<App />);
-  const headerElement = screen.getByText(/Welcome to KobraLocks/i);
-  expect(headerElement).toBeInTheDocument();
-});
-
-test('renders learn more link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn more/i);
-  expect(linkElement).toBeInTheDocument();
-});

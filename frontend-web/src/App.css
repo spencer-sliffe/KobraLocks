@@ -25,3 +25,13 @@
   margin-top: 20px;
 }
 
+.typewriter-cursor {
+  opacity: 1;
+  animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+    opacity: 0;
+  }
+}
