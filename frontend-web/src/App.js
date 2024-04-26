@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const Typewriter = ({ text, averageSpeed = 100, onTypingDone, showCursor }) => {
-  const [content, setContent] = useState('');
+const Typewriter = ({ text, averageSpeed, onTypingDone, showCursor }) => {
   const [mistakeCount, setMistakeCount] = useState(0);
   const [totalMistakesMade, setTotalMistakesMade] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
@@ -13,52 +12,52 @@ const Typewriter = ({ text, averageSpeed = 100, onTypingDone, showCursor }) => {
   useEffect(() => {
     let timer;
 
-    // Decide whether to type next character, make a mistake, or backspace
     const typeCharacter = () => {
       if (currentArray.length < textArray.length && isTyping) {
-        // Randomly decide to make a mistake if no mistake is currently happening
-        if (totalMistakesMade < 3 && Math.random() < 0.1) {
-          setCurrentArray((prev) => prev.concat('_')); // Append a placeholder to represent a mistake
-          setIsTyping(false); // Start backspacing in the next intervals
+        if (Math.random() < 0.1 && totalMistakesMade < 3) {
+          // Simulate a mistake
+          setCurrentArray((prev) => prev.concat('_'));
+          setIsTyping(false);
         } else {
           setCurrentArray((prev) => prev.concat(textArray[currentArray.length]));
         }
       }
     };
 
-    // Correct the mistake by backspacing
     const backspaceCharacter = () => {
       if (!isTyping) {
         if (mistakeCount < 3) {
           setCurrentArray((prev) => prev.slice(0, prev.length - 1));
           setMistakeCount((prev) => prev + 1);
         } else {
-          setIsTyping(true); // Done backspacing, resume typing
-          setMistakeCount(0); // Reset mistake characters count
-          setTotalMistakesMade((prev) => prev + 1); // Increment the total number of mistakes made
+          // End mistake sequence
+          setIsTyping(true);
+          setMistakeCount(0);
+          setTotalMistakesMade((prev) => prev + 1);
         }
       }
     };
 
-    if (currentArray.length === textArray.length && totalMistakesMade === 3) {
-      onTypingDone(); // Notify when typing is done
-    } else {
-      timer = setTimeout(() => {
+    timer = setTimeout(() => {
+      if (currentArray.length === textArray.length && totalMistakesMade === 3) {
+        onTypingDone(); // Typing complete
+      } else {
         if (isTyping) {
           typeCharacter();
         } else {
           backspaceCharacter();
         }
-      }, averageSpeed);
-    }
+      }
+    }, averageSpeed);
 
     return () => clearTimeout(timer);
-  }, [currentArray, textArray, isTyping, mistakeCount, totalMistakesMade, onTypingDone]);
+  }, [currentArray, isTyping, mistakeCount, totalMistakesMade, onTypingDone]);
 
   useEffect(() => {
     const blinkInterval = setInterval(() => {
-      setBlink(prev => !prev);
+      setBlink((prev) => !prev);
     }, 500);
+
     return () => clearInterval(blinkInterval);
   }, []);
 
