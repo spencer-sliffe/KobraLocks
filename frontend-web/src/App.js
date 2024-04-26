@@ -1,84 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-function Typewriter({ text, averageSpeed, onTypingDone, showCursor }) {
+function Typewriter({ text, averageSpeed, onTypingDone, startDelay = 0 }) {
   const [index, setIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
-  const [mistakes, setMistakes] = useState(0);
-  const [backspacing, setBackspacing] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    if (index === text.length && mistakes === 3) {
-      onTypingDone && onTypingDone();  // Ensure typing is done only after 3 mistakes are made
-      return;
+    let typingTimeout;
+    if (isTyping) {
+      if (index < text.length) {
+        typingTimeout = setTimeout(() => {
+          setCurrentText((current) => current + text[index]);
+          setIndex((i) => i + 1);
+          if (index === text.length - 1) {
+            onTypingDone && onTypingDone();
+          }
+        }, averageSpeed);
+      }
+    } else {
+      const startTypingTimeout = setTimeout(() => {
+        setIsTyping(true);
+      }, startDelay);
+
+      return () => clearTimeout(startTypingTimeout);
     }
 
-    const timeout = setTimeout(() => {
-      if (backspacing) {
-        if (currentText.length > index) {
-          setCurrentText(currentText.slice(0, -1));  // Remove last character
-        } else {
-          setBackspacing(false);
-          setMistakes(m => m + 1);
-        }
-      } else {
-        if (index < text.length) {
-          if (Math.random() < 0.1 && mistakes < 3 && !backspacing) {
-            setCurrentText(currentText + '_');  // Simulate a mistake
-            setBackspacing(true);
-          } else {
-            setCurrentText(currentText + text.charAt(index));  // Type next character
-            setIndex(index + 1);
-          }
-        }
-      }
-    }, backspacing ? averageSpeed / 2 : averageSpeed);
-
-    return () => clearTimeout(timeout);
-  }, [currentText, index, backspacing, mistakes, text, averageSpeed, onTypingDone]);
+    return () => clearTimeout(typingTimeout);
+  }, [index, text, averageSpeed, onTypingDone, isTyping, startDelay]);
 
   return (
-    <span>
-      {currentText}
-      {showCursor && <span className="typewriter-cursor" style={{ opacity: 1 }}>|</span>}
-    </span>
+    <span>{currentText}</span>
   );
 }
 
 function App() {
-  const [headerCompleted, setHeaderCompleted] = useState(false);
+  const [startParagraph, setStartParagraph] = useState(false);
+
+  // Start typing the paragraph after a delay
+  useEffect(() => {
+    const paragraphDelay = setTimeout(() => {
+      setStartParagraph(true);
+    }, 2000); // Wait for 2 seconds before starting the paragraph
+
+    return () => clearTimeout(paragraphDelay);
+  }, []);
 
   return (
     <div className="App">
-      <a href="https://kobralocks.tech" className="static-link">kobralocks.tech</a>
       <header className="App-header">
+        {/* Static link at the top left corner */}
+        <a href="https://kobralocks.tech" className="static-link">kobralocks.tech</a>
+        
         <h1>
+          {/* Typewriter for the header */}
           <Typewriter
             text="Welcome to KobraLocks"
             averageSpeed={120}
-            onTypingDone={() => setHeaderCompleted(true)}
-            showCursor={!headerCompleted}
+            onTypingDone={() => console.log('Header completed.')}
           />
         </h1>
-        {headerCompleted && (
-          <div>
-            <p>
-              <Typewriter
-                text="Your ultimate destination for sports betting insights."
-                averageSpeed={100}
-                showCursor={false}
-                onTypingDone={() => console.log('Paragraph done')}
-              />
-            </p>
-            <div>
+        
+        {startParagraph && (
+          <p>
+            {/* Typewriter for the paragraph */}
+            <Typewriter
+              text="Your ultimate destination for sports betting insights."
+              averageSpeed={100}
+              onTypingDone={() => console.log('Paragraph completed.')}
+            />
+          </p>
+        )}
+              <div>
               <button className="button-key" onClick={() => window.location.href = 'https://kobrastocks.tech'}>KobraStocks.tech</button>
               <button className="button-key" onClick={() => window.location.href = 'https://kobracoding.tech'}>KobraCoding.tech</button>
               <button className="button-key" onClick={() => window.location.href = '/about'}>About Kobra</button>
               <button className="button-key" onClick={() => window.location.href = '/signin'}>Sign in</button>
             </div>
-          </div>
-        )}
       </header>
+
     </div>
   );
 }
