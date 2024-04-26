@@ -1,38 +1,63 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background-color: black;
+  color: limegreen;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  font-family: 'Courier New', monospace;
+}
+
+.App-header {
+  background-color: black;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .App-link {
   color: #61dafb;
+  margin-top: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
+.typewriter-cursor {
+  opacity: 1;
+  animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
   to {
-    transform: rotate(360deg);
+    opacity: 0;
   }
+}
+
+.button-key {
+  background-color: #333; /* Dark grey background */
+  color: limegreen; /* Text color to match the terminal theme */
+  border: 2px solid limegreen; /* Border color to match the terminal text */
+  padding: 10px 20px;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.button-key:hover {
+  transform: scale(1.1); /* Slightly enlarge the button when hovered */
+}
+
+.static-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 12px; /* Small font size */
+  color: purple; /* Set the link color to purple */
+  text-decoration: none; /* Optional: removes underline from the link */
+  padding: 10px; /* Adds some padding around the link */
+  font-family: 'Courier New', monospace; /* Maintains the app's theme */
 }
