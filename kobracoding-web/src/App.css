@@ -12,17 +12,23 @@
 }
 
 .App-header {
-  background-color: black;
+  background-color: #121212; /* Slightly off-black for depth */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 20px; /* Padding for better spacing */
 }
 
 .App-link {
-  color: #61dafb;
+  color: purple; /* Keeping the purple theme for links */
   margin-top: 20px;
+  transition: color 0.3s ease-in-out; /* Smooth color transition on hover */
+}
+
+.App-link:hover {
+  color: limegreen; /* Hover effect to lime green */
 }
 
 .typewriter-cursor {
@@ -44,11 +50,12 @@
   font-family: 'Courier New', monospace;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .button-key:hover {
   transform: scale(1.1); /* Slightly enlarge the button when hovered */
+  background-color: #444; /* Slightly lighter background on hover */
 }
 
 .static-link {
@@ -57,7 +64,7 @@
   left: 0;
   font-size: 12px; /* Small font size */
   color: purple; /* Set the link color to purple */
-  text-decoration: none; /* Optional: removes underline from the link */
+  text-decoration: none; /* Removes underline from the link */
   padding: 10px; /* Adds some padding around the link */
   font-family: 'Courier New', monospace; /* Maintains the app's theme */
 }
