@@ -7,7 +7,7 @@ const Navbar = () => {
     return (
         <>
             <Nav>
-                <StaticLink>kobracoding.tech</StaticLink>
+                <StaticLink>kobralocks.tech</StaticLink>
                 <Bars onClick={() => setIsOpen(!isOpen)} />
                 <NavMenu isOpen={isOpen}>
                     {/* Pass isOpen state to styled component */}
