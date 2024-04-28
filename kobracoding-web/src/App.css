@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: black;
+  background-color: #121212;
   color: limegreen;
   min-height: 100vh;
   display: flex;
@@ -22,7 +22,7 @@
 }
 
 .App-link {
-  color: purple; /* Keeping the purple theme for links */
+  color: #DA70D6; /* Keeping the purple theme for links */
   margin-top: 20px;
   transition: color 0.3s ease-in-out; /* Smooth color transition on hover */
 }
@@ -63,7 +63,7 @@
   top: 0;
   left: 0;
   font-size: 12px; /* Small font size */
-  color: purple; /* Set the link color to purple */
+  color: #DA70D6; /* Set the link color to purple */
   text-decoration: none; /* Removes underline from the link */
   padding: 10px; /* Adds some padding around the link */
   font-family: 'Courier New', monospace; /* Maintains the app's theme */
