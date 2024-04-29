@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 // Azure SQL connection configuration
-// Azure SQL connection configuration
 const dbConfig = {
     connectionString: process.env.AZURE_SQL_CONNECTION_STRING, // Use the connection string from the application settings
     options: {
@@ -23,6 +22,7 @@ const dbConfig = {
         trustServerCertificate: false, // change to true for local dev / self-signed certs
     }
 };
+
 
 // Sign Up Endpoint
 app.post('/api/signup', async (req, res) => {
