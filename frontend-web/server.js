@@ -15,13 +15,48 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 // Azure SQL connection configuration
-const dbConfig = {
+/*const dbConfig = {
     connectionString: process.env.AZURE_SQL_CONNECTION_STRING, // Use the connection string from the application settings
     options: {
         encrypt: true, // for Azure SQL Database
         trustServerCertificate: false, // change to true for local dev / self-signed certs
     }
+};*/
+const dbConfig = {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER,
+    database: process.env.DB_DATABASE,
+    options: {
+        encrypt: true, // for Azure SQL Database
+        trustServerCertificate: false, // change to true for local dev / self-signed certs
+    }
 };
+// Sign In Endpoint
+app.post('/api/signin', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Authenticate user by checking credentials against the database
+        let pool = await sql.connect(dbConfig);
+        let result = await pool.request()
+            .input('Username', sql.VarChar, username)
+            .input('Password', sql.VarChar, password)
+            .query('SELECT * FROM Users WHERE Username = @Username AND Password = @Password');
+
+        if (result.recordset.length > 0) {
+            // User found, authentication successful
+            res.status(200).json({ message: 'Sign In Successful' });
+        } else {
+            // User not found or incorrect password
+            res.status(401).json({ message: 'Invalid username or password' });
+        }
+    } catch (err) {
+        // Internal server error
+        console.error('Error during sign in:', err);
+        res.status(500).send('An error occurred during sign in.');
+    }
+});
 
 
 // Sign Up Endpoint
