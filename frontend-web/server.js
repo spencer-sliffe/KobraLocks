@@ -15,11 +15,9 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 // Azure SQL connection configuration
+// Azure SQL connection configuration
 const dbConfig = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    server: process.env.DB_SERVER,
-    database: process.env.DB_DATABASE,
+    connectionString: process.env.AZURE_SQL_CONNECTION_STRING, // Use the connection string from the application settings
     options: {
         encrypt: true, // for Azure SQL Database
         trustServerCertificate: false, // change to true for local dev / self-signed certs
