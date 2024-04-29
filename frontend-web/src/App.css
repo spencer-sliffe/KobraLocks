@@ -72,6 +72,7 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Courier New', monospace;
 }
 
 .container {
@@ -126,4 +127,19 @@ button:hover {
 
 h1 {
   margin-bottom: 20px;
+  font-family: 'Courier New', monospace;
+}
+
+a {
+  font-size: 15px; /* Small font size */
+  color: limegreen; /* Set the link color to purple */
+  text-decoration: none; /* Removes underline from the link */
+  font-family: 'Courier New', monospace;
+}
+
+a:hover {
+  font-size: 16px; /* Small font size */
+  color: #DA70D6; /* Set the link color to purple */
+  text-decoration: none; /* Removes underline from the link */
+  font-family: 'Courier New', monospace;
 }
