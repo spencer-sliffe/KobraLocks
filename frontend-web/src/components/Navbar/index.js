@@ -20,8 +20,8 @@ const Navbar = () => {
                     <NavLink to="/contact" activeStyle={{ color: "#32CD32" }}>
                         Contact Us
                     </NavLink>
-                    <NavLink to="/sign-up" activeStyle={{ color: "#32CD32" }}>
-                        Sign Up
+                    <NavLink to="/sign-in" activeStyle={{ color: "#32CD32" }}>
+                        Sign In
                     </NavLink>
                 </NavMenu>
             </Nav>
