@@ -64,7 +64,7 @@ export const NavMenu = styled.div`
 `;
 
 export const StaticLink = styled.div`
-    padding: 10px;
+    padding-bottom: 10px;
     color: #32CD32; //lime
     font-family: 'Courier New', monospace;
     font-size: 1rem;

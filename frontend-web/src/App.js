@@ -1,3 +1,4 @@
+import { AuthProvider } from './context/AuthContext';
 import './App.css';
 import Navbar from "./components/Navbar";
 import {
@@ -17,6 +18,7 @@ import TempDashBoard from "./pages/tempdashboard.js"
 function App() {
   return (
       <Router>
+         <AuthProvider>
           <Navbar />
           <Routes>
               <Route exact path="/" element={<Home />} />
@@ -27,6 +29,7 @@ function App() {
               <Route path="/success" element={<Success />} /> {/* Add this route */}
               <Route path="/tempdashboard" element={<TempDashBoard />} /> {/* Add this route */}
           </Routes>
+          </AuthProvider>
       </Router>
   );
 }
