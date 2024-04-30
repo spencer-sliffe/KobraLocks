@@ -25,7 +25,7 @@ const SignIn = () => {
                 },
                 body: JSON.stringify(credentials),
             });
-            const data = await response.json(); // This line is useful if the server sends back any data
+            //const data = await response.json(); // This line is useful if the server sends back any data
             if (response.ok) {
                 signIn(credentials.username); // Update authentication state
                 navigate('/tempdashboard'); // Navigate to another page upon successful login
