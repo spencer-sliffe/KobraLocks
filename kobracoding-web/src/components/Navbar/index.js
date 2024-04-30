@@ -8,7 +8,7 @@ const Navbar = () => {
 
     return (
         <Nav>
-            <StaticLink>kobralocks.tech</StaticLink>
+            <StaticLink>kobracoding.tech</StaticLink>
             <Bars onClick={() => setIsOpen(!isOpen)} />
             <NavMenu isOpen={isOpen}>
                 <NavLink to="/" activeStyle={{ color: "#32CD32" }}>Home</NavLink>
