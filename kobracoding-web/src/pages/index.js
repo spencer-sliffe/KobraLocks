@@ -48,7 +48,7 @@ const Home = () => {
         
         <h1>
           <Typewriter
-            text="Welcome to KobraCoding"
+            text="Welcome to KobraLocks"
             averageSpeed={120}
             onTypingDone={() => console.log('Header completed.')}
           />
@@ -57,7 +57,7 @@ const Home = () => {
         {startParagraph && (
           <p>
             <Typewriter
-              text="Your ultimate destination for financial insights."
+              text="Your ultimate destination for sports betting insights."
               averageSpeed={100}
               onTypingDone={() => console.log('Paragraph completed.')}
             />
