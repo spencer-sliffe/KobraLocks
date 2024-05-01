@@ -74,9 +74,17 @@ WSGI_APPLICATION = 'kobra_backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    #'default': {
+     #   'ENGINE': 'django.db.backends.sqlite3',
+      #  'NAME': BASE_DIR / 'db.sqlite3',
+    #}
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres', #local server set up, name will most likely be the same when hosted via VM
+        'USER': 'postgres',
+        'PASSWORD': 'alliecat14', #this is local password set up on my local machine
+        'HOST': 'localhost',  # Or your database host (use localhost if your running via a server hosted on your local machine)
+        'PORT': '5432',       # Or your database port
     }
 }
 

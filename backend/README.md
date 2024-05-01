@@ -36,5 +36,6 @@ RUN SERVER:
 python manage.py runserver
 	The server will start on http://127.0.0.1:8000/. The admin panel can be accessed at http://127.0.0.1:8000/admin.
 
-Is this real chat?
-Testing
+
+POSTGRE INSTRUCTIONS:
+The PostGRESQL server is currently set up to connect to a local database hosted via local machine, to work with this set up you need to install PostGre to your local machine and it will also install pgadmin along with it, which is a GUI to work with PostGreSQL. Then after that you can create a database and the name of the database will replace the one currently there. The user and password fields will also most likely have to change on a person to person basis as of right now.
