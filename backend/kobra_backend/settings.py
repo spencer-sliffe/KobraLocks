@@ -78,13 +78,22 @@ DATABASES = {
      #   'ENGINE': 'django.db.backends.sqlite3',
       #  'NAME': BASE_DIR / 'db.sqlite3',
     #}
-    'default': {
+    'default': { #default for now is postgre, but am working on setting up a routing script for the various databases
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres', #local server set up, name will most likely be the same when hosted via VM
         'USER': 'postgres',
         'PASSWORD': 'alliecat14', #this is local password set up on my local machine
         'HOST': 'localhost',  # Or your database host (use localhost if your running via a server hosted on your local machine)
         'PORT': '5432',       # Or your database port
+    },
+    #mongodb database connection
+    'mongodb': {
+        'ENGINE': 'django.db.backends.dummy',  # Dummy engine, as Django doesn't support MongoDB natively
+        'NAME': 'your_mongodb_database',
+        'USER': '',  # MongoDB typically doesn't use authentication like SQL databases
+        'PASSWORD': '',
+        'HOST': 'localhost',  # Or your MongoDB host
+        'PORT': '27017',      # Or your MongoDB port
     }
 }
 
