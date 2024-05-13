@@ -15,15 +15,15 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 // Azure SQL connection configuration
-/*const dbConfig = {
+const dbConfig = {
     connectionString: process.env.AZURE_SQL_CONNECTION_STRING, // Use the connection string from the application settings
     options: {
         encrypt: true, // for Azure SQL Database
         trustServerCertificate: false, // change to true for local dev / self-signed certs
     }
-};*/
+};
 
-const dbConfig = {
+/*const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     server: process.env.DB_SERVER,
@@ -32,7 +32,7 @@ const dbConfig = {
         encrypt: true, // for Azure SQL Database
         trustServerCertificate: false, // change to true for local dev / self-signed certs
     }
-};
+};*/
 // Sign In Endpoint
 app.post('/api/signin', async (req, res) => {
     try {
