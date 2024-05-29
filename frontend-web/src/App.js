@@ -1,39 +1,43 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import Navbar from './components/Navbar';
+import Home from './pages';
+import About from './pages/about';
+import SignUp from './pages/signup';
+import Contact from './pages/contact';
+import Success from './pages/success';
+import SignIn from './pages/signin';
+import TempDashBoard from './pages/tempdashboard';
 import './App.css';
-import Navbar from "./components/Navbar";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
-
-import Home from "./pages";
-import About from './pages/about.js'; // or About.jsx if using JSX
-import SignUp from "./pages/signup";
-import Contact from "./pages/contact";
-import Success from "./pages/success"; // Import the Success component
-import SignIn from "./pages/signin"
-import TempDashBoard from "./pages/tempdashboard.js"
 
 function App() {
   return (
-      <Router>
-         <AuthProvider>
-          <Navbar />
-          <Routes>
-              <Route exact path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/sign-up" element={<SignUp />} />
-              <Route path="/sign-in" element={<SignIn />} />
-              <Route path="/success" element={<Success />} /> {/* Add this route */}
-              <Route path="/tempdashboard" element={<TempDashBoard />} /> {/* Add this route */}
-          </Routes>
-          </AuthProvider>
-      </Router>
+    <Router>
+      <AuthProvider>
+        <div className="video-background">
+          <video autoPlay muted loop id="myVideo">
+            <source src="/images/Music - 35889.mp4" type="video/mp4" />
+          </video>
+          <div className="green-overlay"></div>
+          <div className="overlay">
+            <Navbar />
+            <div className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/sign-up" element={<SignUp />} />
+                <Route path="/sign-in" element={<SignIn />} />
+                <Route path="/success" element={<Success />} />
+                <Route path="/tempdashboard" element={<TempDashBoard />} />
+              </Routes>
+            </div>
+          </div>
+        </div>
+      </AuthProvider>
+    </Router>
   );
 }
 
 export default App;
-
-

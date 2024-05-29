@@ -1,72 +1,126 @@
-import styled from "styled-components";
-import { FaBars } from "react-icons/fa";
-import { NavLink as Link } from "react-router-dom";
+import styled from 'styled-components';
+import { NavLink as Link } from 'react-router-dom';
+import { FaBars } from 'react-icons/fa';
 
 export const Nav = styled.nav`
-    background: #121212;
-    height: 65px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem calc((100vw - 1000px) / 2);
-    align-items: center;
+  background: transparent;
+  height: 40px; /* Reduced height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 `;
 
-export const NavLink = styled(Link)`
-    color: #DA70D6; // Purple
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    padding: 0 1rem;
-    height: 100%;
+export const NavbarContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  height: 40px; /* Reduced height */
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 24px;
+`;
+
+export const NavLogo = styled(Link)`
+  color: #fff;
+  justify-self: flex-start;
+  cursor: pointer;
+  font-size: 1.2rem; /* Slightly smaller font size */
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+  font-weight: bold;
+  text-decoration: none;
+`;
+
+export const MobileIcon = styled.div`
+  display: none;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-100%, -50%);
+    font-size: 1.8rem;
     cursor: pointer;
-    transition: color 0.3s;
-    font-family: 'Courier New', monospace;
-
-    &:hover, &.active {
-        color: #32CD32; // Lime green
-    }
+    color: #fff;
+  }
 `;
 
-export const Bars = styled(FaBars)`
+export const NavMenu = styled.ul`
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+  margin-right: -22px;
+
+  @media screen and (max-width: 768px) {
+    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+    flex-direction: column;
+    position: absolute;
+    top: 20px; /* Adjusted top position */
+    right: 0; /* Align to the right */
+    background: transparent;
+    padding: 10px;
+    width: 100%; /* Ensure it covers the full width of the viewport */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+  }
+`;
+
+export const NavItem = styled.li`
+  height: 40px; /* Reduced height */
+`;
+
+export const NavLinks = styled(Link)`
+  color: #fff;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 5px 20px; /* Adjusted padding */
+  height: 100%;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: #000;
+  }
+
+  &.active {
+    border-bottom: 3px solid #000;
+  }
+`;
+
+export const NavBtn = styled.nav`
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 768px) {
     display: none;
-    color: #32CD32; // lime
-    @media screen and (max-width: 768px) {
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translate(-100%, 50%);
-        font-size: 1.8rem;
-        cursor: pointer;
-        font-family: 'Courier New', monospace;
-    }
+  }
 `;
 
-export const NavMenu = styled.div`
-    display: flex;
-    align-items: center;
-    margin-right: -24px; // Ensure links are pushed to the right
+export const NavBtnLink = styled(Link)`
+  border-radius: 50px;
+  background: #fff;
+  white-space: nowrap;
+  padding: 8px 16px; /* Adjusted padding */
+  color: #000;
+  font-size: 14px; /* Slightly smaller font size */
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  margin-left: 24px;
 
-    @media screen and (max-width: 768px) {
-        display: flex;
-        flex-direction: column;
-        width: 100%; // Full width for dropdown
-        height: auto;
-        position: absolute;
-        top: 65px; // Start below the navbar
-        left: 0;
-        background: #121212; // Match navbar background
-        font-family: 'Courier New', monospace;
-        transition: max-height 0.3s ease-in;
-        max-height: ${({ isOpen }) => (isOpen ? "300px" : "0")}; // Animate open/close
-        overflow: hidden;
-    }
+  &:hover {
+    transition: all 0.2s ease-in-out;
+    background: #000;
+    color: #fff;
+  }
 `;
 
-export const StaticLink = styled.div`
-    padding-bottom: 10px;
-    color: #32CD32; //lime
-    font-family: 'Courier New', monospace;
-    font-size: 1rem;
-    cursor: pointer;
-`;

@@ -43,9 +43,8 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        
+    <div className="home-container">
+      <header className="home-header">
         <h1>
           <Typewriter
             text="Welcome to KobraLocks"
@@ -64,7 +63,7 @@ const Home = () => {
           </p>
         )}
 
-        <div>
+        <div className="button-container">
           <button className="button-key" onClick={() => window.location.href = 'https://kobrastocks.tech'}>KobraStocks.tech</button>
           <button className="button-key" onClick={() => window.location.href = 'https://kobracoding.tech'}>KobraCoding.tech</button>
         </div>

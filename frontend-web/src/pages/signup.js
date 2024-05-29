@@ -28,7 +28,7 @@ const SignUp = () => {
             if (response.ok) {
                 const result = await response.json();
                 console.log('Sign Up Successful:', result);
-                navigate('/success');
+                navigate('/signin');
             } else {
                 console.log('Sign Up Failed:', response);
             }
