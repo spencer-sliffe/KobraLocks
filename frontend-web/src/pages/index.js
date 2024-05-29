@@ -43,8 +43,8 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="home-container">
-      <header className="home-header">
+    <div className="App">
+      <header className="App-header home-header">
         <h1>
           <Typewriter
             text="Welcome to KobraLocks"
@@ -52,7 +52,6 @@ const Home = () => {
             onTypingDone={() => console.log('Header completed.')}
           />
         </h1>
-        
         {startParagraph && (
           <p>
             <Typewriter
@@ -62,7 +61,6 @@ const Home = () => {
             />
           </p>
         )}
-
         <div className="button-container">
           <button className="button-key" onClick={() => window.location.href = 'https://kobrastocks.tech'}>KobraStocks.tech</button>
           <button className="button-key" onClick={() => window.location.href = 'https://kobracoding.tech'}>KobraCoding.tech</button>
@@ -73,3 +71,4 @@ const Home = () => {
 };
 
 export default Home;
+
