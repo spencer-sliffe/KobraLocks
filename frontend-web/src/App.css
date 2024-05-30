@@ -34,6 +34,20 @@ body {
   object-fit: cover; /* Ensure the video covers the entire background */
 }
 
+video::slotted::-webkit-media-controls-container{
+  display:none !important;
+  visibility: hidden!important;
+  opacity: 0 !important;
+ -webkit-appearance: none !important;
+}
+
+:host::shadow::-webkit-media-controls-container{
+  display:none !important;
+  visibility: hidden!important;
+  opacity: 0 !important;
+  -webkit-appearance: none !important;
+}
+
 .green-overlay {
   position: absolute;
   top: 0;
