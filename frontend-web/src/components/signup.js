@@ -1,6 +1,7 @@
-// SignUp.js
+// src/components/SignUp.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signUp as apiSignUp } from '../api'; // Import the signUp function from api
 
 const SignUp = () => {
     const [userData, setUserData] = useState({
@@ -8,7 +9,7 @@ const SignUp = () => {
         email: '',
         password: ''
     });
-
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -18,22 +19,11 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('/api/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
-            if (response.ok) {
-                const result = await response.json();
-                console.log('Sign Up Successful:', result);
-                navigate('/signin');
-            } else {
-                console.log('Sign Up Failed:', response);
-            }
+            const response = await apiSignUp(userData.username, userData.email, userData.password);
+            console.log('Sign Up Successful:', response);
+            navigate('/sign-in');
         } catch (error) {
-            console.error('Error during sign up:', error);
+            setError(error.message || 'Sign Up Failed');
         }
     };
 
@@ -46,6 +36,7 @@ const SignUp = () => {
                 <input type="password" name="password" placeholder="Password" value={userData.password} onChange={handleChange} required />
                 <button type="submit">Sign Up</button>
             </form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <p>Already have an account? <a href="/sign-in">Sign In</a></p>
         </div>
     );

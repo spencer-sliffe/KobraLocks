@@ -1,6 +1,8 @@
+// src/components/SignIn.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Ensure the path is correct based on your project structure
+import { signIn as apiSignIn } from '../api'; // Import the signIn function from api
 
 const SignIn = () => {
     const [credentials, setCredentials] = useState({
@@ -18,23 +20,11 @@ const SignIn = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('/api/signin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(credentials),
-            });
-            //const data = await response.json(); // This line is useful if the server sends back any data
-            if (response.ok) {
-                signIn(credentials.username); // Update authentication state
-                navigate('/tempdashboard'); // Navigate to another page upon successful login
-            } else {
-                setError('Invalid username or password');
-            }
+            const response = await apiSignIn(credentials.username, credentials.password);
+            signIn(response.username); // Update authentication state
+            navigate('/tempdashboard'); // Navigate to another page upon successful login
         } catch (error) {
-            console.error('Error during sign in:', error);
-            setError('An error occurred. Please try again later.');
+            setError(error.message || 'Invalid username or password');
         }
     };
 

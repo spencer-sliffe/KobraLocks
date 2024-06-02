@@ -3,8 +3,7 @@
 import os
 import sys
 import psycopg2
-
-
+sys.path.append('/Users/spencersliffe/Documents/GitHub/KobraLocks/backend/kobra_backend')
 
 def main():
     """Run administrative tasks."""

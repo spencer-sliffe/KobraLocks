@@ -4,10 +4,10 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages';
 import About from './pages/about';
-import SignUp from './pages/signup';
+import SignUp from './components/signup';
 import Contact from './pages/contact';
 import Success from './pages/success';
-import SignIn from './pages/signin';
+import SignIn from './components/signin';
 import TempDashBoard from './pages/tempdashboard';
 import './App.css';
 
