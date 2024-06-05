@@ -18,22 +18,26 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Create and start virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install -r ./backend/requirements.txt
       
+      - name: Install dependencies
+        run: pip install -r ./backend/requirements.txt
+
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip ./* -x venv/**\*
+        run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
           name: python-app
-          path: release.zip
+          path: |
+            release.zip
+            !venv/
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,23 +57,12 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Set up Python version
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install -r ./backend/requirements.txt
-
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_81ADF4A8FAC04B22AC7173D495FBE454 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_21A2F610A3AE475981F997D32DC79FDC }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_93E15F21C6374EB0924D74491BCB42D4 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
@@ -79,8 +72,20 @@ jobs:
           slot-name: 'Production'
           package: './backend'
 
-      - name: Run migrations and collectstatic
+      - name: Run collectstatic
         run: |
           source venv/bin/activate
-          python ./backend/manage.py migrate
           python ./backend/manage.py collectstatic --noinput
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+          DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SERVER: ${{ secrets.DB_SERVER }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SES_REGION_NAME: ${{ secrets.AWS_SES_REGION_NAME }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
