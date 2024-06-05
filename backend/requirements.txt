@@ -15,5 +15,4 @@ tzdata==2024.1
 whitenoise==6.3.0
 django-ses==1.0.3
 python-dotenv==1.0.1
-django-mssql-backend
-
+mssql-django==1.1.0
