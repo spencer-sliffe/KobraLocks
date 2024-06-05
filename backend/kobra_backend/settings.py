@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'kobra_backend.api',
+    'api',
 ]
 
 MIDDLEWARE = [
