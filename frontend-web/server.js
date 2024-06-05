@@ -29,7 +29,7 @@ const dbConfig = {
     database: process.env.DB_DATABASE,
     options: {
         encrypt: true, // for Azure SQL Database
-        trustServerCertificate: true, // change to true for local dev / self-signed certs
+        trustServerCertificate: false, // change to true for local dev / self-signed certs
     }
 };
 // Sign In Endpoint
