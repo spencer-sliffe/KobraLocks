@@ -1,4 +1,4 @@
-nname: Build and deploy Python app to Azure Web App - KobraLocksBackend
+name: Build and deploy Python app to Azure Web App - KobraLocksBackend
 
 on:
   push:
