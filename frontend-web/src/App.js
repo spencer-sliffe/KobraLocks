@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+//frontend-web/src/App.js
+
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -8,6 +10,9 @@ import SignUp from './components/signup';
 import Contact from './pages/contact';
 import Success from './pages/success';
 import SignIn from './components/signin';
+import ForgotPassword from './components/ForgotPassword';
+import VerifyResetCode from './components/VerifyResetCode';
+import ResetPassword from './components/ResetPassword';
 import TempDashBoard from './pages/tempdashboard';
 import './App.css';
 
@@ -29,6 +34,9 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/sign-up" element={<SignUp />} />
                 <Route path="/sign-in" element={<SignIn />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/verify-reset-code" element={<VerifyResetCode />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/success" element={<Success />} />
                 <Route path="/tempdashboard" element={<TempDashBoard />} />
               </Routes>

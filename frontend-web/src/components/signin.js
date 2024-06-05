@@ -1,4 +1,4 @@
-// src/components/SignIn.js
+// frontend-web/src/components/SignIn.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Ensure the path is correct based on your project structure
@@ -52,6 +52,7 @@ const SignIn = () => {
             </form>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <p>Don't have an account? <a href="/sign-up">Sign Up</a></p>
+            <p><a href="/forgot-password">Forgot Password?</a></p>
         </div>
     );
 };
