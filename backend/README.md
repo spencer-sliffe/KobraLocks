@@ -26,8 +26,8 @@ python3 -m venv venv
 source venv/bin/activate
 
 WINDOWS:
-python -m venv env
-env\Scripts\activate
+python -m venv venv
+venv\Scripts\activate
 
 DEPENDENCIES:
 pip install -r requirements.txt
