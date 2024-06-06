@@ -1,4 +1,4 @@
-# backend/kobra_backend/api/forms.py
+# backend/api/forms.py
 
 from django import forms
 

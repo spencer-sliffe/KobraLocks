@@ -1,4 +1,4 @@
-// frontend-web/src/components/SignUp.js
+// frontend-web/src/components/signup.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signUp as apiSignUp } from '../api'; // Import the signUp function from api

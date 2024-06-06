@@ -141,4 +141,4 @@ build/
 ehthumbs.db
 Thumbs.db
 
-staticfiles/
+staticfile/

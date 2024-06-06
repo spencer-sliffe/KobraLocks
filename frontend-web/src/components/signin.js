@@ -1,4 +1,4 @@
-// frontend-web/src/components/SignIn.js
+// frontend-web/src/components/signin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Ensure the path is correct based on your project structure

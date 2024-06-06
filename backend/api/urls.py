@@ -1,4 +1,4 @@
-# backend/kobra_backend/api/urls.py
+# backend/api/urls.py
 
 from django.urls import path
 from .views import ForgotPasswordView, ResetPasswordView, VerifyResetCodeView, signin, signup
