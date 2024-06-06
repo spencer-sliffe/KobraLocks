@@ -100,10 +100,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "kobralocksfrontend-web.azurewebsites.net",
+    "https://kobralocksfrontend-web.azurewebsites.net",
     "https://kobralocks.tech", 
     "https://kobralocks-sql.database.windows.net"
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Email configuration for Amazon SES
 EMAIL_BACKEND = 'django_ses.SESBackend'
