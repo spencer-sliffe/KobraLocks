@@ -85,6 +85,7 @@ jobs:
           python ./backend/manage.py migrate
           python ./backend/manage.py collectstatic --noinput
         env:
+          DJANGO_SETTINGS_MODULE: kobra_backend.settings
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
@@ -97,4 +98,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SES_REGION_NAME: ${{ secrets.AWS_SES_REGION_NAME }}
           FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
-          
