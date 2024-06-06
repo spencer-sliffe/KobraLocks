@@ -102,6 +102,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://kobralocksfrontend-web.azurewebsites.net",
     "https://kobralocks.tech", 
+    "https://kobralocks-sql.database.windows.net"
 ]
 
 # Email configuration for Amazon SES
