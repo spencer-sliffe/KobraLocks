@@ -17,6 +17,7 @@
 ###### Netlify
 ### Email Service
 ###### AWS SNS
-###### NamesCheap/PrivateEmail
+###### NamesCheap
+###### PrivateEmail
 ### Phone Service
 ###### AWS SES
