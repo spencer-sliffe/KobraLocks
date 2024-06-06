@@ -1,7 +1,10 @@
+# backend/manage.py
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+sys.path.append('/Users/spencersliffe/Documents/GitHub/KobraLocks/backend/kobra_backend')
+#sys.path.append('/Users/spencersliffe/Documents/GitHub/KobraLocks/backend/api')
 
 def main():
     """Run administrative tasks."""
@@ -18,4 +21,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

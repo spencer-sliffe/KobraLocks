@@ -1,4 +1,4 @@
-# backend/kobra_backend/api/serializers.py
+# backend/api/serializers.py
 
 from rest_framework import serializers
 from .models import MyModel

@@ -1,4 +1,4 @@
-# backend/kobra_backend/api/apps.py
+# backend/api/apps.py
 
 from django.apps import AppConfig
 

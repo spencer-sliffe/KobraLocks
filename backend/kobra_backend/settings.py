@@ -115,4 +115,4 @@ AWS_SES_REGION_NAME = os.getenv('AWS_SES_REGION_NAME', 'us-east-2')  # Update to
 AWS_SES_REGION_ENDPOINT = f'email.{os.getenv("AWS_SES_REGION_NAME", "us-east-2")}.amazonaws.com'
 
 # Frontend URL for password reset links
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://kobralocksfrontend-web.azurewebsites.net')  # Default to your Azure frontend URL
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')  # Default to your Azure frontend URL

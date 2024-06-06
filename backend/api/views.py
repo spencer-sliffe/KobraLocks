@@ -1,4 +1,4 @@
-# api/views.py
+# backend/api/views.py
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail

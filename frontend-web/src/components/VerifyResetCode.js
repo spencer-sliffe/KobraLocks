@@ -1,4 +1,4 @@
-//frontend-web/src/components/VerifyResetCode.js
+// frontend-web/src/components/VerifyResetCode.js
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
