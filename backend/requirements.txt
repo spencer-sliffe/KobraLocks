@@ -16,3 +16,4 @@ whitenoise==6.3.0
 django-ses==1.0.3
 python-dotenv==1.0.1
 mssql-django
+djangorestframework-simplejwt

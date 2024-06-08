@@ -8,21 +8,30 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 import random
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signin(request):
     username = request.data.get('username')
     password = request.data.get('password')
     try:
         user = User.objects.get(username=username)
         if user.check_password(password):
-            return Response({'message': 'Sign In Successful'}, status=status.HTTP_200_OK)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
     except User.DoesNotExist:
         return Response({'message': 'Account Does Not Exist'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signup(request):
     username = request.data.get('username')
     email = request.data.get('email')
@@ -30,10 +39,13 @@ def signup(request):
     try:
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
-        return Response({'message': 'Sign Up Successful'}, status=status.HTTP_201_CREATED)
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 class ForgotPasswordView(APIView):
     permission_classes = [AllowAny]
 

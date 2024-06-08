@@ -1,4 +1,4 @@
-// Success.js
+// frontend-web/src/pages/success.js
 import React from 'react';
 
 const Success = () => {

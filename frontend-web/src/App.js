@@ -14,6 +14,7 @@ import ForgotPassword from './components/ForgotPassword';
 import VerifyResetCode from './components/VerifyResetCode';
 import ResetPassword from './components/ResetPassword';
 import TempDashBoard from './pages/tempdashboard';
+import Account from './pages/account'; // Import the Account page
 import './App.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/success" element={<Success />} />
                 <Route path="/tempdashboard" element={<TempDashBoard />} />
+                <Route path="/account" element={<Account />} /> {/* Add Account route */}
               </Routes>
             </div>
           </div>

@@ -1,4 +1,4 @@
-// tempdashboard.js
+// frontend-web/src/pages/tempdashboard.js
 import React from 'react';
 
 const TempDashboard = () => {
