@@ -1,3 +1,5 @@
+//frontend-web/src/components/account.js
+
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { signOut } from '../api'; // Import the signOut function from api
