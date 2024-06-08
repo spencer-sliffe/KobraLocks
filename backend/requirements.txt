@@ -18,4 +18,3 @@ python-dotenv==1.0.1
 mssql-django
 djangorestframework-simplejwt
 pyodbc
-unixodbcpip
