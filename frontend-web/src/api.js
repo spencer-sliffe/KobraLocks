@@ -64,3 +64,13 @@ export const resetPassword = async (email, code, password) => {
         throw error.response.data;
     }
 };
+
+// New function to fetch games
+export const fetchGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/games/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};

@@ -1,11 +1,12 @@
 // frontend-web/src/components/Dashboard/Home.js
 
 import React from 'react';
+import GameList from './GameList';
 
 const Home = () => {
     return (
         <div>
-            <h1>Home</h1>
+            <GameList />
         </div>
     );
 };

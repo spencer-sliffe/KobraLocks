@@ -1,0 +1,53 @@
+.game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.game-card {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 20px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.team-names {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.team-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.team-score {
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.odds {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.odds-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.odds-item {
+    flex: 1;
+    text-align: center;
+}
+
+.live-info {
+    margin-top: 10px;
+    color: #ff4c4c;
+    font-weight: bold;
+}
