@@ -1,4 +1,4 @@
-// frontend-web/src/components/Dashboard/Dashboard.js
+// frontend-web/src/components/Dashboard/dashboard.js
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
@@ -12,7 +12,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <DashboardNavbar />
-      <div className="main-content">
+      <div className="dashboard-main-content">
         <Routes>
           <Route path="home" element={<Home />} />
           <Route path="slipcenter" element={<SlipCenter />} />
@@ -24,5 +24,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
