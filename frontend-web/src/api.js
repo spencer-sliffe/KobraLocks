@@ -66,9 +66,63 @@ export const resetPassword = async (email, code, password) => {
 };
 
 // New function to fetch games
-export const fetchGames = async () => {
+export const fetchNCAABBGames = async () => {
   try {
-    const response = await axios.get(`${API_URL}/games/`);
+    const response = await axios.get(`${API_URL}/ncaabbgames/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const fetchMLBGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/mlbgames/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const fetchNFLGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/nflgames/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const fetchNCAAFBGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/ncaafbgames/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const fetchMLSGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/mlsgames/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const fetchWNBAGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/wnbagames/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const fetchNBAGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/nbagames/`);
     return response.data;
   } catch (error) {
     throw error.response.data;

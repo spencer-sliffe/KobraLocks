@@ -12,12 +12,36 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics
-from .models import Game
-from .serializers import GameSerializer
+from .models import NCAABBGame, MLBGame, NFLGame, NCAAFBGame, NBAGame, WNBAGame, MLSGame
+from .serializers import NCAABBGameSerializer, MLBGameSerializer, NFLGameSerializer, NCAAFBGameSerializer, NBAGameSerializer, WNBAGameSerializer, MLSGameSerializer
 
-class GameListView(generics.ListAPIView):
-    queryset = Game.objects.all()
-    serializer_class = GameSerializer
+class NCAABBGameListView(generics.ListAPIView):
+    queryset = NCAABBGame.objects.all()
+    serializer_class = NCAABBGameSerializer
+
+class MLBGameListView(generics.ListAPIView):
+    queryset = MLBGame.objects.all()
+    serializer_class = MLBGameSerializer
+
+class NFLGameListView(generics.ListAPIView):
+    queryset = NFLGame.objects.all()
+    serializer_class = NFLGameSerializer
+
+class NCAAFBGameListView(generics.ListAPIView):
+    queryset = NCAAFBGame.objects.all()
+    serializer_class = NCAAFBGameSerializer
+
+class NBAGameListView(generics.ListAPIView):
+    queryset = NBAGame.objects.all()
+    serializer_class = NBAGameSerializer
+
+class WNBAGameListView(generics.ListAPIView):
+    queryset = WNBAGame.objects.all()
+    serializer_class = WNBAGameSerializer
+
+class MLSGameListView(generics.ListAPIView):
+    queryset = MLSGame.objects.all()
+    serializer_class = MLSGameSerializer
     
 @api_view(['POST'])
 @permission_classes([AllowAny])

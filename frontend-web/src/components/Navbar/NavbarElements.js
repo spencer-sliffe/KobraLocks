@@ -12,7 +12,7 @@ export const Nav = styled.nav`
   font-size: 1rem; /* Slightly reduced font size */
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 11;
 `;
 
 export const NavbarContainer = styled.div`
