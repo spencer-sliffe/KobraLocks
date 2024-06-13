@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import json
 
 #Baseball
 class NCAABBGame(models.Model):
@@ -20,6 +21,26 @@ class NCAABBGame(models.Model):
     team1_money = models.CharField(max_length=20, null=True, blank=True)  # Increased size
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
+class NCAABBFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    teams = models.TextField()  # Store JSON-encoded list as a string
+    odds = models.TextField()   # Store JSON-encoded list as a string
+
+    def set_teams(self, teams_list):
+        self.teams = json.dumps(teams_list)
+
+    def get_teams(self):
+        return json.loads(self.teams)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+    
 class MLBGame(models.Model):
     team1 = models.CharField(max_length=100)
     team2 = models.CharField(max_length=100)
@@ -38,6 +59,79 @@ class MLBGame(models.Model):
     team1_money = models.CharField(max_length=20, null=True, blank=True)  # Increased size
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
+class MLBFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    teams = models.TextField()  # Store JSON-encoded list as a string
+    odds = models.TextField()   # Store JSON-encoded list as a string
+
+    def set_teams(self, teams_list):
+        self.teams = json.dumps(teams_list)
+
+    def get_teams(self):
+        return json.loads(self.teams)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+
+
+class MLBSpecials(models.Model):
+    section_title = models.CharField(max_length=100)
+    bet_titles = models.TextField()
+    odds = models.TextField()
+
+    def set_bet_titles(self, bet_titles_list):
+        self.bet_titles = json.dumps(bet_titles_list)
+
+    def get_bet_titles(self):
+        return json.loads(self.bet_titles)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+
+class MLBPlayerFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    players = models.TextField()
+    odds = models.TextField()
+
+    def set_players(self, players_list):
+        self.teams = json.dumps(players_list)
+
+    def get_players(self):
+        return json.loads(self.players)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+    
+class MLBTeamPlayoffs(models.Model):
+    row_title = models.CharField(max_length=100)
+    yes_odds = models.CharField(max_length=20, null=True, blank=True)
+    no_odds = models.CharField(max_length=20, null=True, blank=True)
+
+class MLBWinTotals(models.Model):
+    team = models.CharField(max_length=100)
+    over_title = models.CharField(max_length=100)
+    under_title = models.CharField(max_length=100)
+    over_odds = models.CharField(max_length=20, null=True, blank=True)
+    under_odds = models.CharField(max_length=20, null=True, blank=True)
+
 # Football
 class NFLGame(models.Model):
     team1 = models.CharField(max_length=100)
@@ -54,6 +148,100 @@ class NFLGame(models.Model):
     team2_total = models.CharField(max_length=20, null=True, blank=True)  # Increased size
     team1_money = models.CharField(max_length=20, null=True, blank=True)  # Increased size
     team2_money = models.CharField(max_length=20, null=True, blank=True)
+
+class NFLFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    teams = models.TextField()  # Store JSON-encoded list as a string
+    odds = models.TextField()   # Store JSON-encoded list as a string
+
+    def set_teams(self, teams_list):
+        self.teams = json.dumps(teams_list)
+
+    def get_teams(self):
+        return json.loads(self.teams)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+
+class NFLPlayerFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    players = models.TextField()
+    odds = models.TextField()
+
+    def set_players(self, players_list):
+        self.teams = json.dumps(players_list)
+
+    def get_players(self):
+        return json.loads(self.players)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+
+class NFLPlayerTotals(models.Model):
+    row_title = models.CharField(max_length=100)
+    over_decimal_odds = models.CharField(max_length=20, null=True, blank=True)
+    under_decimal_odds = models.CharField(max_length=20, null=True, blank=True)
+    over_american_odds = models.CharField(max_length=20, null=True, blank=True)
+    under_american_odds = models.CharField(max_length=20, null=True, blank=True)
+
+class NFLDivisionSpecials(models.Model):
+    section_title = models.CharField(max_length=100)
+    bet_titles = models.TextField(null=True)
+    team_titles = models.TextField(null=True)
+    odds = models.TextField()
+    
+    def set_team_titles(self, team_titles_list):
+        self.team_titles = json.dumps(team_titles_list)
+
+    def get_team_titles(self):
+        return json.loads(self.team_titles)
+
+    def set_bet_titles(self, bet_titles_list):
+        self.bet_titles = json.dumps(bet_titles_list)
+
+    def get_bet_titles(self):
+        return json.loads(self.bet_titles)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+
+class NFLSeasonSpecials(models.Model):
+    section_title = models.CharField(max_length=100)
+    teams = models.TextField()  # Store JSON-encoded list as a string
+    odds = models.TextField()   # Store JSON-encoded list as a string
+
+    def set_teams(self, teams_list):
+        self.teams = json.dumps(teams_list)
+
+    def get_teams(self):
+        return json.loads(self.teams)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
     
 class NCAAFBGame(models.Model):
     team1 = models.CharField(max_length=100)
@@ -104,6 +292,46 @@ class NBAGame(models.Model):
     team1_money = models.CharField(max_length=20, null=True, blank=True)  # Increased size
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
+class NBAFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    teams = models.TextField()  # Store JSON-encoded list as a string
+    odds = models.TextField()   # Store JSON-encoded list as a string
+
+    def set_teams(self, teams_list):
+        self.teams = json.dumps(teams_list)
+
+    def get_teams(self):
+        return json.loads(self.teams)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+
+class NBAPlayerFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    players = models.TextField()
+    odds = models.TextField()
+
+    def set_players(self, players_list):
+        self.teams = json.dumps(players_list)
+
+    def get_players(self):
+        return json.loads(self.players)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+    
 class WNBAGame(models.Model):
     team1 = models.CharField(max_length=100)
     team2 = models.CharField(max_length=100)
@@ -120,6 +348,45 @@ class WNBAGame(models.Model):
     team1_money = models.CharField(max_length=20, null=True, blank=True)  # Increased size
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
+class WNBAFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    teams = models.TextField()  # Store JSON-encoded list as a string
+    odds = models.TextField()   # Store JSON-encoded list as a string
+
+    def set_teams(self, teams_list):
+        self.teams = json.dumps(teams_list)
+
+    def get_teams(self):
+        return json.loads(self.teams)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
+
+class WNBAPlayerFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    players = models.TextField()
+    odds = models.TextField()
+
+    def set_players(self, players_list):
+        self.teams = json.dumps(players_list)
+
+    def get_players(self):
+        return json.loads(self.players)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
 # Soccer
 class MLSGame(models.Model):
     team1 = models.CharField(max_length=100)
@@ -133,6 +400,25 @@ class MLSGame(models.Model):
     draw_odds = models.CharField(max_length=20, null=True, blank=True)
     team2_odds = models.CharField(max_length=20, null=True, blank=True) 
 
+class MLSFutures(models.Model):
+    section_title = models.CharField(max_length=100)
+    teams = models.TextField()  # Store JSON-encoded list as a string
+    odds = models.TextField()   # Store JSON-encoded list as a string
+
+    def set_teams(self, teams_list):
+        self.teams = json.dumps(teams_list)
+
+    def get_teams(self):
+        return json.loads(self.teams)
+
+    def set_odds(self, odds_list):
+        self.odds = json.dumps(odds_list)
+
+    def get_odds(self):
+        return json.loads(self.odds)
+
+    def __str__(self):
+        return self.section_title
 
 class MyModel(models.Model):
     name = models.CharField(max_length=100)

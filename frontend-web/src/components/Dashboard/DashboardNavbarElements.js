@@ -26,12 +26,13 @@ export const SidebarToggleButton = styled.button`
   background: #000;
   color: #fff;
   border: none;
-  padding: 10px;
+  padding-right: 10px;
   cursor: pointer;
   position: fixed;
-  top: 10px;
-  left: 10px;
+  top: 24px;
+  left: 0;
   z-index: 10;
+
 
   @media screen and (min-width: 768px) {
     display: none; /* Hide toggle button on larger screens */

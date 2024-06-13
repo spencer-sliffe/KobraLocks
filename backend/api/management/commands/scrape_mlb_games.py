@@ -7,8 +7,6 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 from api.models import MLBGame
-import datetime
-import pytz
 import logging
 
 class Command(BaseCommand):
