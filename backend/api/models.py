@@ -132,6 +132,83 @@ class MLBWinTotals(models.Model):
     over_odds = models.CharField(max_length=20, null=True, blank=True)
     under_odds = models.CharField(max_length=20, null=True, blank=True)
 
+class MLBGameLinks(models.Model):
+    links = models.TextField()
+    
+    def set_links(self, links_list):
+        self.links = json.dumps(links_list)
+
+    def get_links(self):
+        return json.loads(self.links)
+
+class MLBGameParlays(models.Model):
+    game_id = models.CharField(max_length=100, null=True, blank=True)
+    game = models.CharField(max_length=100, null=True, blank=True)
+    section_title = models.CharField(max_length=100)
+    player = models.CharField(max_length=50, null=True, blank=True)
+    decimal_odds = models.TextField()
+    american_odds = models.TextField()
+
+    def set_decimal_odds(self, decimal_odds_list):
+        self.teams = json.dumps(decimal_odds_list)
+
+    def get_decimal_odds(self):
+        return json.loads(self.decimal_odds)
+
+    def set_american_odds(self, american_odds_list):
+        self.american_odds = json.dumps(american_odds_list)
+
+    def get_american_odds(self):
+        return json.loads(self.american_odds)
+
+class MLBGameProps(models.Model):
+    game_id = models.CharField(max_length=100, null=True, blank=True)
+    game = models.CharField(max_length=100, null=True, blank=True)
+    section_title = models.CharField(max_length=100)
+    row_title = models.CharField(max_length=100)
+    decimal_odds = models.TextField()
+    american_odds = models.TextField()
+
+    def set_decimal_odds(self, decimal_odds_list):
+        self.teams = json.dumps(decimal_odds_list)
+
+    def get_decimal_odds(self):
+        return json.loads(self.decimal_odds)
+
+    def set_american_odds(self, american_odds_list):
+        self.american_odds = json.dumps(american_odds_list)
+
+    def get_american_odds(self):
+        return json.loads(self.american_odds)
+
+class MLBGamePlayerProps(models.Model):
+    game_id = models.CharField(max_length=100, null=True, blank=True)
+    game = models.CharField(max_length=100, null=True, blank=True)
+    section_title = models.CharField(max_length=100)
+    player = models.CharField(max_length=100)
+    row_title = models.CharField(max_length=100)
+    decimal_odds = models.TextField()
+    american_odds = models.TextField()
+
+    def set_decimal_odds(self, decimal_odds_list):
+        self.teams = json.dumps(decimal_odds_list)
+
+    def get_decimal_odds(self):
+        return json.loads(self.decimal_odds)
+
+    def set_american_odds(self, american_odds_list):
+        self.american_odds = json.dumps(american_odds_list)
+
+    def get_american_odds(self):
+        return json.loads(self.american_odds)
+
+class MLBGameSpecials(models.Model):
+    game_id = models.CharField(max_length=100, null=True, blank=True)
+    game = models.CharField(max_length=100, null=True, blank=True)
+    section_title = models.CharField(max_length=100)
+    row_value = models.CharField(max_length=20, null=True, blank=True)
+    odds = models.CharField(max_length=20, null=True, blank=True)
+
 # Football
 class NFLGame(models.Model):
     team1 = models.CharField(max_length=100)

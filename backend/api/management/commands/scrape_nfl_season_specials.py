@@ -30,7 +30,7 @@ class Command(BaseCommand):
         # URL to scrape
         url = "https://espnbet.com/sport/football/organization/united-states/competition/nfl/section/season_specials"
         driver.get(url)
-        time.sleep(5)  # Wait for the page to load
+        time.sleep(3)  # Wait for the page to load
 
         # Parse page content
         soup = BeautifulSoup(driver.page_source, 'html.parser')
