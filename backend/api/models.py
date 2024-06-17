@@ -22,6 +22,7 @@ class NCAABBGame(models.Model):
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
 class NCAABBFutures(models.Model):
+    #teams and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     teams = models.TextField()  # Store JSON-encoded list as a string
     odds = models.TextField()   # Store JSON-encoded list as a string
@@ -60,6 +61,7 @@ class MLBGame(models.Model):
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
 class MLBFutures(models.Model):
+    #teams and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     teams = models.TextField()  # Store JSON-encoded list as a string
     odds = models.TextField()   # Store JSON-encoded list as a string
@@ -81,6 +83,7 @@ class MLBFutures(models.Model):
 
 
 class MLBSpecials(models.Model):
+    #bet_titles and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     bet_titles = models.TextField()
     odds = models.TextField()
@@ -101,6 +104,7 @@ class MLBSpecials(models.Model):
         return self.section_title
 
 class MLBPlayerFutures(models.Model):
+    #players and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     players = models.TextField()
     odds = models.TextField()
@@ -142,6 +146,7 @@ class MLBGameLinks(models.Model):
         return json.loads(self.links)
 
 class MLBGameParlays(models.Model):
+    #decimal_odds and #american_odds are parallel arrays
     game_id = models.CharField(max_length=100, null=True, blank=True)
     game = models.CharField(max_length=100, null=True, blank=True)
     section_title = models.CharField(max_length=100)
@@ -162,6 +167,7 @@ class MLBGameParlays(models.Model):
         return json.loads(self.american_odds)
 
 class MLBGameProps(models.Model):
+    #decimal_odds and #american_odds are parallel arrays
     game_id = models.CharField(max_length=100, null=True, blank=True)
     game = models.CharField(max_length=100, null=True, blank=True)
     section_title = models.CharField(max_length=100)
@@ -182,6 +188,7 @@ class MLBGameProps(models.Model):
         return json.loads(self.american_odds)
 
 class MLBGamePlayerProps(models.Model):
+    #decimal_odds and #american_odds are parallel arrays
     game_id = models.CharField(max_length=100, null=True, blank=True)
     game = models.CharField(max_length=100, null=True, blank=True)
     section_title = models.CharField(max_length=100)
@@ -227,6 +234,7 @@ class NFLGame(models.Model):
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
 class NFLFutures(models.Model):
+    #teams and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     teams = models.TextField()  # Store JSON-encoded list as a string
     odds = models.TextField()   # Store JSON-encoded list as a string
@@ -247,6 +255,7 @@ class NFLFutures(models.Model):
         return self.section_title
 
 class NFLPlayerFutures(models.Model):
+    # players and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     players = models.TextField()
     odds = models.TextField()
@@ -274,6 +283,8 @@ class NFLPlayerTotals(models.Model):
     under_american_odds = models.CharField(max_length=20, null=True, blank=True)
 
 class NFLDivisionSpecials(models.Model):
+    # bet titles (if not null) and odds are parallel arrays
+    # team title (if not null) and odds are parallel arrays 
     section_title = models.CharField(max_length=100)
     bet_titles = models.TextField(null=True)
     team_titles = models.TextField(null=True)
@@ -301,6 +312,7 @@ class NFLDivisionSpecials(models.Model):
         return self.section_title
 
 class NFLSeasonSpecials(models.Model):
+    # teams and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     teams = models.TextField()  # Store JSON-encoded list as a string
     odds = models.TextField()   # Store JSON-encoded list as a string
@@ -370,6 +382,7 @@ class NBAGame(models.Model):
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
 class NBAFutures(models.Model):
+    #teams and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     teams = models.TextField()  # Store JSON-encoded list as a string
     odds = models.TextField()   # Store JSON-encoded list as a string
@@ -390,6 +403,7 @@ class NBAFutures(models.Model):
         return self.section_title
 
 class NBAPlayerFutures(models.Model):
+    # players and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     players = models.TextField()
     odds = models.TextField()
@@ -426,6 +440,7 @@ class WNBAGame(models.Model):
     team2_money = models.CharField(max_length=20, null=True, blank=True)
 
 class WNBAFutures(models.Model):
+    # teams and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     teams = models.TextField()  # Store JSON-encoded list as a string
     odds = models.TextField()   # Store JSON-encoded list as a string
@@ -446,6 +461,7 @@ class WNBAFutures(models.Model):
         return self.section_title
 
 class WNBAPlayerFutures(models.Model):
+    # players and odds are parallel arrays
     section_title = models.CharField(max_length=100)
     players = models.TextField()
     odds = models.TextField()
@@ -478,6 +494,7 @@ class MLSGame(models.Model):
     team2_odds = models.CharField(max_length=20, null=True, blank=True) 
 
 class MLSFutures(models.Model):
+    # teams and odds are parallel arrays 
     section_title = models.CharField(max_length=100)
     teams = models.TextField()  # Store JSON-encoded list as a string
     odds = models.TextField()   # Store JSON-encoded list as a string

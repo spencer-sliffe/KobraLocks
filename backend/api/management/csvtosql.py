@@ -92,7 +92,7 @@ connection_string = f'mssql+pyodbc://{username}:{password}@{server}/{database}?d
 engine = create_engine(connection_string)
 
 # Determine the row to start from
-start_row = 103858
+start_row = 156833
 
 # Read the CSV file with specified dtypes and handle missing values, starting from the specified row
 chunksize = 1000
