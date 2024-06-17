@@ -53,7 +53,7 @@ class Command(BaseCommand):
         driver = webdriver.Chrome(service=service, options=options)
 
         driver.get(event_url)
-        time.sleep(3)  # Reduced sleep time
+        time.sleep(10)  # Reduced sleep time
 
         # Parse event page content
         soup = BeautifulSoup(driver.page_source, 'html.parser')

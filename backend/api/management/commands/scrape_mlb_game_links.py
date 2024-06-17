@@ -18,6 +18,8 @@ class Command(BaseCommand):
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
 
+        MLBGameLinks.objects.all().delete()
+        self.logger.info("Cleared the MLBGameLinks table in the database.")   
         # Setup Selenium WebDriver
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
@@ -26,7 +28,7 @@ class Command(BaseCommand):
         # URL to scrape
         url = "https://espnbet.com/sport/baseball/organization/united-states/competition/mlb"
         driver.get(url)
-        time.sleep(3)  # Wait for the page to load
+        time.sleep(10)  # Wait for the page to load
 
         # Parse page content
         soup = BeautifulSoup(driver.page_source, 'html.parser')

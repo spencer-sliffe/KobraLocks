@@ -17,8 +17,14 @@ class Command(BaseCommand):
             'scrape_mlb_games',
             'scrape_mlb_game_parlays',
             'scrape_mlb_game_props',
-            'scrape_mlb_game_player_props',
+            'scrape_mlb_player_props',
             'scrape_mlb_game_specials',
+            'scrape_mlb_futures',
+            'scrape_mlb_player_futures',
+            'scrape_mlb_playoffs',
+            'scrape_mlb_specials',
+            'scrape_mlb_wins',
+            'scrape_mlb_specials',
         ]
 
         with ThreadPoolExecutor(max_workers=10) as executor:
