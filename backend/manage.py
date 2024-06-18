@@ -4,7 +4,6 @@
 import os
 import sys
 sys.path.append('/Users/spencersliffe/Documents/GitHub/KobraLocks/backend/kobra_backend')
-#sys.path.append('/Users/spencersliffe/Documents/GitHub/KobraLocks/backend/api')
 
 def main():
     """Run administrative tasks."""
