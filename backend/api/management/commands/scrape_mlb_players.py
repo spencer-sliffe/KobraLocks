@@ -34,7 +34,6 @@ class Command(BaseCommand):
             "134": "PIT", "135": "SDP", "137": "SFG", 
             "141": "TOR", "120": "WSH", "136": "SEA",
             "138": "STL", "139": "TBR", "140": "TEX"
-
         }
         for team_id, tid in teams.items():
             for year in years:
@@ -52,30 +51,14 @@ class Command(BaseCommand):
             logging.info(f"Processing team {tid} for year {year}")
             driver.get("https://www.mlb.com/player/andrew-abbott-671096")
             time.sleep(2)
-            retries = 3
-            for attempt in range(retries):
-                try:
-                    # Select the year
-                    year_select = Select(driver.find_element(By.CSS_SELECTOR, "select[data-type='season']"))
-                    year_select.select_by_value(str(year))
-                    time.sleep(2)
-                    break
-                except Exception as e:
-                    logging.error(f"Attempt {attempt + 1} - Error selecting year {year}: {e}")
-                    if attempt == retries - 1:
-                        raise
 
-            for attempt in range(retries):
-                try:
-                    # Select the team
-                    team_select = Select(driver.find_element(By.CSS_SELECTOR, "select[data-type='team']"))
-                    team_select.select_by_value(team_id)
-                    time.sleep(2)
-                    break
-                except Exception as e:
-                    logging.error(f"Attempt {attempt + 1} - Error selecting team {tid}: {e}")
-                    if attempt == retries - 1:
-                        raise
+            if not self.retry_select_option(driver, "select[data-type='season']", str(year), retries=3):
+                logging.error(f"Failed to select year {year} after retries")
+                return
+
+            if not self.retry_select_option(driver, "select[data-type='team']", team_id, retries=3):
+                logging.error(f"Failed to select team {tid} after retries")
+                return
 
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             player_elements = soup.select("select[data-type='player'] option")
@@ -112,9 +95,9 @@ class Command(BaseCommand):
                 if not MLB_Player.objects.filter(PYID=PYID).exists():
                     self.logger.info(f"Player: {player_name}, PID: {player_id}, PYID: {PYID}, TYID: {team}, LYID: {league}, year: {year}, link: {link}")
                     
-                    batting_stats = self.scrape_player_batting_stats(link, year, driver)
-                    fielding_stats = self.scrape_player_fielding_stats(link, year, driver)
-                    pitching_stats = self.scrape_player_pitching_stats(link, year, driver)
+                    batting_stats = self.scrape_player_stats(link, year, driver, 'hitting')
+                    fielding_stats = self.scrape_player_stats(link, year, driver, 'fielding')
+                    pitching_stats = self.scrape_player_stats(link, year, driver, 'pitching')
 
                     player = MLB_Player(
                         PID=player_id,
@@ -135,31 +118,46 @@ class Command(BaseCommand):
         finally:
             driver.quit()
 
-        # Use ThreadPoolExecutor to run the function concurrently
-        
+    def retry_select_option(self, driver, selector, value, retries=3):
+        for attempt in range(retries):
+            try:
+                select_element = Select(driver.find_element(By.CSS_SELECTOR, selector))
+                select_element.select_by_value(value)
+                time.sleep(2)
+                return True
+            except Exception as e:
+                logging.error(f"Attempt {attempt + 1} - Error selecting {value}: {e}")
+                if attempt == retries - 1:
+                    return False
 
-    def scrape_player_batting_stats(self, link, year, driver):
+    def scrape_player_stats(self, link, year, driver, stat_type):
         driver.get(link)
         time.sleep(3)
         self.logger.info(f"Connected to link: {link}")
         try:
             self.handle_consent_banner(driver)
             self.logger.info(f"Trying to click stats button")
-            stats_button = driver.find_element(By.ID, "stats-nav-item")
+            stats_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "stats-nav-item"))
+            )
             stats_button.click()
             time.sleep(2)
             self.logger.info(f"Clicked Stats button")
-            self.logger.info(f"trying to click batting button")
-            section = driver.find_element(By.ID, "stats-block")
-            batting_button = section.find_element(By.CSS_SELECTOR, "button[data-type='hitting']")
-            batting_button.click()
-            self.logger.info(f"batting button clicked")
+
+            section = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "stats-block"))
+            )
+            stat_button = section.find_element(By.CSS_SELECTOR, f"button[data-type='{stat_type}']")
+            stat_button.click()
+            self.logger.info(f"{stat_type} button clicked")
             time.sleep(2)
+
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             career_table = soup.select_one("#careerTable tbody")
             if not career_table:
                 self.logger.warning(f"No career table found for {link}")
                 return {}
+
             stats_row = None
             for row in career_table.find_all("tr"):
                 season = row.find("td", {"data-col": "0"}).text.strip()
@@ -171,7 +169,14 @@ class Command(BaseCommand):
                 self.logger.warning(f"No stats found for year {year} at {link}")
                 return {}
 
-            stats = {
+            return self.extract_stats(stats_row, stat_type)
+        except Exception as e:
+            self.logger.error(f"No {stat_type} stats for: {link} due to {e}")
+            return {}
+
+    def extract_stats(self, stats_row, stat_type):
+        if stat_type == 'hitting':
+            return {
                 'at_bats': int(stats_row.find("td", {"data-col": "4"}).text.replace('\n', '').strip()),
                 'runs': int(stats_row.find("td", {"data-col": "5"}).text.replace('\n', '').strip()),
                 'hits': int(stats_row.find("td", {"data-col": "6"}).text.replace('\n', '').strip()),
@@ -189,95 +194,16 @@ class Command(BaseCommand):
                 'slugging_percentage': float(stats_row.find("td", {"data-col": "19"}).text.replace('\n', '').strip()),
                 'on_base_plus_slugging': float(stats_row.find("td", {"data-col": "20"}).text.replace('\n', '').strip()),
             }
-            return stats
-        except Exception:
-            self.logger.error(f"No Batting stats for: {link}")
-            return{}
-
-    def scrape_player_fielding_stats(self, link, year, driver):
-        driver.get(link)
-        time.sleep(3)
-        self.logger.info(f"Connected to link: {link}") 
-        try:
-            self.handle_consent_banner(driver)
-            self.logger.info(f"Trying to click stats button")
-            stats_button = driver.find_element(By.ID, "stats-nav-item")
-            stats_button.click()
-            time.sleep(2)
-            self.logger.info(f"Clicked Stats button")
-            self.logger.info(f"trying to click fielding button")
-            section = driver.find_element(By.ID, "stats-block")       
-            fielding_button = section.find_element(By.CSS_SELECTOR, "button[data-type='fielding']")
-            fielding_button.click()
-            self.logger.info(f"fielding button clicked")
-            time.sleep(2)
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            career_table = soup.select_one("#careerTable tbody")
-            if not career_table:
-                self.logger.warning(f"No career table found for {link}")
-                return {}
-            stats_row = None
-            for row in career_table.find_all("tr"):
-                season = row.find("td", {"data-col": "0"}).text.strip()
-                if season == str(year):
-                    stats_row = row
-                    break
-
-            if not stats_row:
-                self.logger.warning(f"No stats found for year {year} at {link}")
-                return {}
-
-
-            stats = {
+        elif stat_type == 'fielding':
+            return {
                 'position': stats_row.find("td", {"data-col": "3"}).text.replace('\n', '').strip(),
                 'games': int(stats_row.find("td", {"data-col": "4"}).text.replace('\n', '').strip()),
                 'errors': int(stats_row.find("td", {"data-col": "10"}).text.replace('\n', '').strip()),
                 'double_plays': int(stats_row.find("td", {"data-col": "11"}).text.replace('\n', '').strip()),
                 'fielding_percentage': float(stats_row.find("td", {"data-col": "16"}).text.replace('\n', '').strip()),
             }
-            return stats
-        except Exception:
-            self.logger.error(f"No Fielding stats for: {link}")
-            return{}
-
-    def scrape_player_pitching_stats(self, link, year, driver):
-        driver.get(link)
-        time.sleep(3)
-        self.logger.info(f"Connected to link: {link}")
-        try:  
-            self.handle_consent_banner(driver)
-            self.logger.info(f"Trying to click stats button")
-            stats_button = driver.find_element(By.ID, "stats-nav-item")
-            stats_button.click()
-            time.sleep(2)
-            self.logger.info(f"Clicked Stats button")
-            self.logger.info(f"trying to click pitching button")
-            section = driver.find_element(By.ID, "stats-block")
-            pitching_button = section.find_element(By.CSS_SELECTOR, "button[data-type='pitching']")
-            if not pitching_button:
-                self.logger.warning(f"No pitching stats available for {link}")
-                return {}
-            pitching_button.click()
-            self.logger.info(f"pitching button clicked")
-            time.sleep(2)
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            career_table = soup.select_one("#careerTable tbody")
-            if not career_table:
-                self.logger.warning(f"No career table found for {link}")
-                return {}
-            stats_row = None
-            for row in career_table.find_all("tr"):
-                season = row.find("td", {"data-col": "0"}).text.strip()
-                if season == str(year):
-                    stats_row = row
-                    break
-
-            if not stats_row:
-                self.logger.warning(f"No stats found for year {year} at {link}")
-                return {}
-
-
-            stats = {
+        elif stat_type == 'pitching':
+            return {
                 'wins': int(stats_row.find("td", {"data-col": "3"}).text.replace('\n', '').strip()),
                 'losses': int(stats_row.find("td", {"data-col": "4"}).text.replace('\n', '').strip()),
                 'earned_run_average': float(stats_row.find("td", {"data-col": "5"}).text.replace('\n', '').strip()),
@@ -299,10 +225,6 @@ class Command(BaseCommand):
                 'batting_average_against': float(stats_row.find("td", {"data-col": "23"}).text.replace('\n', '').strip()),
                 'whip': float(stats_row.find("td", {"data-col": "24"}).text.replace('\n', '').strip()),
             }
-            return stats
-        except Exception:
-            self.logger.error(f"No Pitching stats for: {link}")
-            return{}
 
     def create_player(self, player):
         if not MLB_Player.objects.filter(PYID=player.PYID).exists():
@@ -311,11 +233,11 @@ class Command(BaseCommand):
         else:
             self.logger.info(f"Player already exists: {player.player_name} with PYID: {player.PYID}")
 
-
     def handle_consent_banner(self, driver):
         try:
-            if driver.find_element(By.ID, "onetrust-accept-btn-handler"):
-                banner = driver.find_element(By.ID, "onetrust-accept-btn-handler")
-                banner.click()
+            banner = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler"))
+            )
+            banner.click()
         except Exception:
             self.logger.warning(f"Consent banner not found or not clickable")
