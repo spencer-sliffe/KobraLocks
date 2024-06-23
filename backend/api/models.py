@@ -2,6 +2,126 @@ from django.db import models
 from django.contrib.auth.models import User
 import json
 
+from django.db import models
+
+class League(models.Model):
+    LID = models.CharField(max_length=10)  # League ID like MLB, NFL, etc.
+    LYID = models.CharField(max_length=10, primary_key=True)  # League Year ID
+    year = models.PositiveIntegerField()
+    bias = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.LID
+
+class MLB_Team(models.Model):
+    TID = models.CharField(max_length=10)  # Universal team identifier
+    TYID = models.CharField(max_length=10, primary_key=True)  # Team identifier for a specific year
+    LYID = models.ForeignKey(League, on_delete=models.CASCADE)  # League Year ID as a foreign key
+    team_name = models.CharField(max_length=100)
+    year = models.PositiveIntegerField()
+    games = models.PositiveIntegerField()
+    # Batting
+    at_bats = models.IntegerField(null=True, blank=True)
+    runs = models.IntegerField(null=True, blank=True)
+    hits = models.IntegerField(null=True, blank=True)
+    doubles = models.IntegerField(null=True, blank=True)
+    triples = models.IntegerField(null=True, blank=True)
+    home_runs = models.IntegerField(null=True, blank=True)
+    runs_batted_in = models.IntegerField(null=True, blank=True)
+    walks = models.IntegerField(null=True, blank=True)
+    strike_outs = models.IntegerField(null=True, blank=True)
+    stolen_bases = models.IntegerField(null=True, blank=True)
+    caught_stealing = models.IntegerField(null=True, blank=True)
+    batting_average = models.DecimalField(max_digits=5, decimal_places=3)
+    on_base_percentage = models.DecimalField(max_digits=5, decimal_places=3)
+    slugging_percentage = models.DecimalField(max_digits=5, decimal_places=3)
+    on_base_plus_slugging = models.DecimalField(max_digits=5, decimal_places=3)
+    # Pitching
+    wins = models.IntegerField(null=True, blank=True)
+    losses = models.IntegerField(null=True, blank=True)
+    earned_run_average = models.DecimalField(max_digits=5, decimal_places=2)
+    shut_outs = models.IntegerField(null=True, blank=True)
+    holds = models.IntegerField(null=True, blank=True)
+    saves = models.IntegerField(null=True, blank=True)
+    save_opportunities = models.IntegerField(null=True, blank=True)
+    p_hits = models.IntegerField(null=True, blank=True)
+    p_runs = models.IntegerField(null=True, blank=True)
+    earned_runs = models.IntegerField(null=True, blank=True)
+    p_home_runs = models.IntegerField(null=True, blank=True)
+    p_walks = models.IntegerField(null=True, blank=True)
+    p_strike_outs = models.IntegerField(null=True, blank=True) 
+    whip = models.DecimalField(max_digits=5, decimal_places=2) 
+    batting_average_against = models.DecimalField(max_digits=5, decimal_places=3)
+
+    def __str__(self):
+        return self.team_name
+
+class MLB_Player(models.Model):
+    PID = models.CharField(max_length=10)  # Universal player identifier
+    PYID = models.CharField(max_length=20, primary_key=True)  # Player identifier for a specific year
+    TYID = models.ForeignKey(MLB_Team, on_delete=models.CASCADE)  # Team ID the player played on for that year
+    LYID = models.ForeignKey(League, on_delete=models.CASCADE, null=True, blank=True)   # League Year ID as a foreign key
+    player_name = models.CharField(max_length=100)
+    year = models.PositiveIntegerField()
+    link = models.CharField(max_length=60, null=True, blank=True) 
+    # Batting
+    at_bats = models.IntegerField(null=True, blank=True)
+    runs = models.IntegerField(null=True, blank=True)
+    hits = models.IntegerField(null=True, blank=True)
+    total_bases = models.IntegerField(null=True, blank=True)
+    doubles = models.IntegerField(null=True, blank=True)
+    triples = models.IntegerField(null=True, blank=True)
+    home_runs = models.IntegerField(null=True, blank=True)
+    runs_batted_in = models.IntegerField(null=True, blank=True)
+    walks = models.IntegerField(null=True, blank=True)
+    strike_outs = models.IntegerField(null=True, blank=True)
+    stolen_bases = models.IntegerField(null=True, blank=True)
+    caught_stealing = models.IntegerField(null=True, blank=True)
+    batting_average = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    on_base_percentage = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    slugging_percentage = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    on_base_plus_slugging = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    # Fielding
+    position = models.CharField(max_length=5, null=True, blank=True)  
+    games = models.IntegerField(null=True, blank=True)
+    errors = models.IntegerField(null=True, blank=True)
+    double_plays = models.IntegerField(null=True, blank=True)
+    fielding_percentage = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    # Pitching
+    wins = models.IntegerField(null=True, blank=True)
+    losses = models.IntegerField(null=True, blank=True)
+    earned_run_average = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    p_games = models.IntegerField(null=True, blank=True)
+    games_started = models.IntegerField(null=True, blank=True)
+    complete_games = models.IntegerField(null=True, blank=True)
+    shut_outs = models.IntegerField(null=True, blank=True)
+    holds = models.IntegerField(null=True, blank=True)
+    saves = models.IntegerField(null=True, blank=True)
+    save_opportunities = models.IntegerField(null=True, blank=True)
+    innings_pitched = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True) 
+    p_hits = models.IntegerField(null=True, blank=True)
+    p_runs = models.IntegerField(null=True, blank=True)
+    earned_runs = models.IntegerField(null=True, blank=True)
+    p_home_runs = models.IntegerField(null=True, blank=True)
+    number_of_pitches = models.IntegerField(null=True, blank=True)
+    p_walks = models.IntegerField(null=True, blank=True)
+    p_strike_outs = models.IntegerField(null=True, blank=True) 
+    whip = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True) 
+    batting_average_against = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+
+    def __str__(self):
+        return self.player_name
+
+class MLB_Game(models.Model):
+    GID = models.CharField(max_length=10, primary_key=True)  # Universal game ID
+    LYID = models.ForeignKey(League, on_delete=models.CASCADE)  # League Year ID as a foreign key
+    Date = models.DateField()
+    h_TYID = models.ForeignKey(MLB_Team, related_name='home_games', on_delete=models.CASCADE)  # Home team's team ID
+    v_TYID = models.ForeignKey(MLB_Team, related_name='away_games', on_delete=models.CASCADE)  # Visiting team's team ID
+
+    def __str__(self):
+        return f"Game {self.GID} on {self.Date}"
+
 #Baseball
 class NCAABBGame(models.Model):
     team1 = models.CharField(max_length=100)
