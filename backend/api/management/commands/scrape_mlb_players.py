@@ -25,15 +25,15 @@ class Command(BaseCommand):
         #MLB_Player.objects.all().delete()
         years = range(2020, 2025)  # From 2000 to 2024
         teams = {
+            "147": "NYY", "133": "OAK", "143": "PHI",
+            "134": "PIT", "135": "SDP", "137": "SFG", 
+            "141": "TOR", "120": "WSH", "136": "SEA",
+            "138": "STL", "139": "TBR", "140": "TEX",
             "109": "ARI", "144": "ATL", "110": "BAL",
             "111": "BOS", "112": "CHC", "145": "CWS",
             "113": "CIN", "114": "CLE", "115": "COL", "116": "DET",
             "117": "HOU", "118": "KCR", "108": "LAA", "119": "LAD",
-            "146": "MIA", "158": "MIL", "142": "MIN", "121": "NYM",
-            "147": "NYY", "133": "OAK", "143": "PHI",
-            "134": "PIT", "135": "SDP", "137": "SFG", 
-            "141": "TOR", "120": "WSH", "136": "SEA",
-            "138": "STL", "139": "TBR", "140": "TEX"
+            "146": "MIA", "158": "MIL", "142": "MIN", "121": "NYM"
         }
         for team_id, tid in teams.items():
             for year in years:
@@ -47,89 +47,73 @@ class Command(BaseCommand):
         options.add_argument('--no-sandbox')
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
-        try:
-            logging.info(f"Processing team {tid} for year {year}")
+        logging.info(f"Processing team {tid} for year {year}")
+        driver.get("https://www.mlb.com/player/andrew-abbott-671096")
+        time.sleep(2)
+
+        if not self.retry_select_option(driver, "select[data-type='season']", str(year), retries=3):
+            logging.error(f"Failed to select year {year} after retries")
+            return
+
+        if not self.retry_select_option(driver, "select[data-type='team']", team_id, retries=3):
+            logging.error(f"Failed to select team {tid} after retries")
+            return
+
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        player_elements = soup.select("select[data-type='player'] option")
+        logging.info(f"Found {len(player_elements)} players for team {tid} in year {year}")
+
+        for index, element in enumerate(player_elements):
+            if index == 0:
+                continue  # Skip the first element
             driver.get("https://www.mlb.com/player/andrew-abbott-671096")
             time.sleep(2)
+            player_name = element.text.strip()
+            player_id = element['value']
+            player_slug = element.get('data-slug', player_id)
+            link = f"https://www.mlb.com/player/{player_slug}"
+            logging.info(f"Selected player: {player_name}")
 
-            if not self.retry_select_option(driver, "select[data-type='season']", str(year), retries=3):
-                logging.error(f"Failed to select year {year} after retries")
-                return
+            PID = player_id
+            PYID = f"{PID}_{year}"
 
-            if not self.retry_select_option(driver, "select[data-type='team']", team_id, retries=3):
-                logging.error(f"Failed to select team {tid} after retries")
-                return
-
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            player_elements = soup.select("select[data-type='player'] option")
-            logging.info(f"Found {len(player_elements)} players for team {tid} in year {year}")
-
-            for index, element in enumerate(player_elements):
-                if index == 0:
-                    continue  # Skip the first element
-                driver.get("https://www.mlb.com/player/andrew-abbott-671096")
-                time.sleep(2)
-                player_name = element.text.strip()
-                player_id = element['value']
-                player_slug = element.get('data-slug', player_id)
-                link = f"https://www.mlb.com/player/{player_slug}"
-                logging.info(f"Selected player: {player_name}")
-
-                PID = player_id
-                PYID = f"{PID}_{year}"
-
-                try:
-                    team = MLB_Team.objects.get(TYID=f"{tid}_{year}")
-                    logging.info(f"Team with TYID '{tid}_{year}' found.")
-                except MLB_Team.DoesNotExist:
-                    logging.error(f"Team with TYID '{tid}_{year}' not found.")
-                    continue
-
-                try:
-                    league = League.objects.get(LYID=f"MLB_{year}")
-                    logging.info(f"League with LYID '{tid}_{year}' found.")
-                except League.DoesNotExist:
-                    logging.error(f"League with LYID 'MLB_{year}' not found.")
-                    continue
-
-                if not MLB_Player.objects.filter(PYID=PYID).exists():
-                    self.logger.info(f"Player: {player_name}, PID: {player_id}, PYID: {PYID}, TYID: {team}, LYID: {league}, year: {year}, link: {link}")
-                    
-                    batting_stats = self.scrape_player_stats(link, year, driver, 'hitting')
-                    fielding_stats = self.scrape_player_stats(link, year, driver, 'fielding')
-                    pitching_stats = self.scrape_player_stats(link, year, driver, 'pitching')
-
-                    player = MLB_Player(
-                        PID=player_id,
-                        PYID=PYID,
-                        TYID=team,
-                        LYID=league,
-                        player_name=player_name,
-                        year=year,
-                        link=link,
-                        **batting_stats,
-                        **fielding_stats,
-                        **pitching_stats,
-                    )
-
-                    self.create_player(player)
-                else:
-                    continue
-        except Exception as e:
-            logging.error(f"Error processing team {tid} for year {year}: {e}")            
-
-    def retry_select_option(self, driver, selector, value, retries=3):
-        for attempt in range(retries):
             try:
-                select_element = Select(driver.find_element(By.CSS_SELECTOR, selector))
-                select_element.select_by_value(value)
-                time.sleep(2)
-                return True
-            except Exception as e:
-                logging.error(f"Attempt {attempt + 1} - Error selecting {value}: {e}")
-                if attempt == retries - 1:
-                    return False
+                team = MLB_Team.objects.get(TYID=f"{tid}_{year}")
+                logging.info(f"Team with TYID '{tid}_{year}' found.")
+            except MLB_Team.DoesNotExist:
+                logging.error(f"Team with TYID '{tid}_{year}' not found.")
+                continue
 
+            try:
+                league = League.objects.get(LYID=f"MLB_{year}")
+                logging.info(f"League with LYID '{tid}_{year}' found.")
+            except League.DoesNotExist:
+                logging.error(f"League with LYID 'MLB_{year}' not found.")
+                continue
+
+            if not MLB_Player.objects.filter(PYID=PYID).exists():
+                self.logger.info(f"Player: {player_name}, PID: {player_id}, PYID: {PYID}, TYID: {team}, LYID: {league}, year: {year}, link: {link}")
+                
+                batting_stats = self.scrape_player_stats(link, year, driver, 'hitting') or {}
+                fielding_stats = self.scrape_player_stats(link, year, driver, 'fielding') or {}
+                pitching_stats = self.scrape_player_stats(link, year, driver, 'pitching') or {}
+                
+                player = MLB_Player(
+                    PID=player_id,
+                    PYID=PYID,
+                    TYID=team,
+                    LYID=league,
+                    player_name=player_name,
+                    year=year,
+                    link=link,
+                    **batting_stats,
+                    **fielding_stats,
+                    **pitching_stats,
+                )
+
+                self.create_player(player)
+            else:
+                continue
 
     def retry_select_option(self, driver, selector, value, retries=3):
         for attempt in range(retries):
@@ -185,7 +169,7 @@ class Command(BaseCommand):
             return self.extract_stats(stats_row, stat_type)
         except Exception:
             self.logger.error(f"No {stat_type} stats for: {link}")
-
+            return {}
 
     def extract_stats(self, stats_row, stat_type):
         if stat_type == 'hitting':
