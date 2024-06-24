@@ -114,7 +114,7 @@ class Command(BaseCommand):
 
                     self.create_player(player)
                 else:
-                    break
+                    continue
         except Exception as e:
             logging.error(f"Error processing team {tid} for year {year}: {e}")            
 
@@ -185,9 +185,7 @@ class Command(BaseCommand):
             return self.extract_stats(stats_row, stat_type)
         except Exception:
             self.logger.error(f"No {stat_type} stats for: {link}")
-        except Exception as e:
-            self.logger.error(f"No {stat_type} stats for: {link} due to {e}")
-            return {}
+
 
     def extract_stats(self, stats_row, stat_type):
         if stat_type == 'hitting':
