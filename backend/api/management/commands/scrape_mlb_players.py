@@ -116,9 +116,20 @@ class Command(BaseCommand):
                 else:
                     break
         except Exception as e:
-            logging.error(f"Error processing team {tid} for year {year}: {e}")
+            logging.error(f"Error processing team {tid} for year {year}: {e}")            
 
-            
+    def retry_select_option(self, driver, selector, value, retries=3):
+        for attempt in range(retries):
+            try:
+                select_element = Select(driver.find_element(By.CSS_SELECTOR, selector))
+                select_element.select_by_value(value)
+                time.sleep(2)
+                return True
+            except Exception as e:
+                logging.error(f"Attempt {attempt + 1} - Error selecting {value}: {e}")
+                if attempt == retries - 1:
+                    return False
+
 
     def retry_select_option(self, driver, selector, value, retries=3):
         for attempt in range(retries):
@@ -174,6 +185,8 @@ class Command(BaseCommand):
             return self.extract_stats(stats_row, stat_type)
         except Exception:
             self.logger.error(f"No {stat_type} stats for: {link}")
+        except Exception as e:
+            self.logger.error(f"No {stat_type} stats for: {link} due to {e}")
             return {}
 
     def extract_stats(self, stats_row, stat_type):
