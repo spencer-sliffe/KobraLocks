@@ -1,4 +1,4 @@
-'''letters = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 
+"letters = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 
             'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 
             'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -26,4 +26,4 @@ class Command(BaseCommand):
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         
-    def scrape_team_'''
+    def scrape_team_
