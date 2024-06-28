@@ -23,20 +23,23 @@ class Command(BaseCommand):
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         #MLB_Player.objects.all().delete()
-        years = range(2024, 2025)  # From 2000 to 2024
+        years = range(2023, 2025)  # From 2000 to 2024
         teams = {
-            "118": "KCR", "108": "LAA", "119": "LAD",
-            "139": "TBR", "140": "TEX", "138": "STL", 
+            "135": "SDP", "137": "SFG", "147": "NYY",
+            "134": "PIT", 
+            "144": "ATL","141": "TOR", "120": "WSH", "136": "SEA",
             "113": "CIN", "114": "CLE", "115": "COL", "116": "DET",
             "117": "HOU", 
-            "146": "MIA", "121": "NYM",
-            "141": "TOR", "120": "WSH", "136": "SEA",
-            "144": "ATL", "110": "BAL",
-            "111": "BOS", "112": "CHC", "145": "CWS",
-            "117": "HOU", "134": "PIT", "135": "SDP", "137": "SFG", "147": "NYY",
-            "109": "ARI",
             "133": "OAK", "143": "PHI",
             "158": "MIL", "142": "MIN",  
+            "109": "ARI", "118": "KCR", "108": "LAA", "119": "LAD",
+            "139": "TBR", "140": "TEX", "138": "STL", 
+            "111": "BOS", "112": "CHC", "145": "CWS",
+            "117": "HOU", 
+            "146": "MIA", "121": "NYM",   
+            "110": "BAL",
+            
+            
         }
         for year in years:
             for team_id, tid in teams.items():
@@ -232,6 +235,7 @@ class Command(BaseCommand):
             self.logger.info(f"Added player: {player.player_name} with PYID: {player.PYID}")
         else:
             self.logger.info(f"Player already exists: {player.player_name} with PYID: {player.PYID}")
+            return
 
     def handle_consent_banner(self, driver):
         try:

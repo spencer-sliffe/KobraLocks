@@ -15,7 +15,7 @@ class Command(BaseCommand):
         # Setup logging
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
-
+        NFL_player_link.objects.all().delete()
         # Setup Selenium WebDriver
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
@@ -66,7 +66,7 @@ class Command(BaseCommand):
                     link_parts = og_link.split('/')
 
                     # Insert 'stats' into the appropriate position
-                    link_parts.insert(6, 'stats')
+                    link_parts.insert(5, 'stats')
 
                     # Join the parts back together into a single URL
                     link = '/'.join(link_parts)
