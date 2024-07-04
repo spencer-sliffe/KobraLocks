@@ -1,25 +1,36 @@
-import React, { createContext, useState, useContext } from 'react';
+//frontend-web/src/context/AuthContext.js
+
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext(null);
 
-// Export useAuth for easy access to context
 export const useAuth = () => useContext(AuthContext);
 
-// Define and export AuthProvider
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null); // null when not logged in
+  const [user, setUser] = useState(null);
 
-    const signIn = (username) => {
-        setUser({ username });
-    };
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // Optionally, you can decode the token to get user information
+      setUser({ username: 'User' }); // Adjust this according to your user data
+    }
+  }, []);
 
-    const signOut = () => {
-        setUser(null);
-    };
+  const signIn = (username) => {
+    setUser({ username });
+  };
 
-    return (
-        <AuthContext.Provider value={{ user, signIn, signOut }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const signOut = () => {
+    setUser(null);
+    localStorage.removeItem('token');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, signIn, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

@@ -1,3 +1,5 @@
+// frontend-web/src/components/Navbar/index.js
+
 import React, { useState } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
@@ -25,7 +27,7 @@ const Navbar = () => {
     <>
       <Nav>
         <NavbarContainer>
-          <NavLogo to="/">kobralocks.tech</NavLogo>
+          <NavLogo to="/">KobraLocks</NavLogo>
           <MobileIcon onClick={toggle}>
             <FaBars />
           </MobileIcon>

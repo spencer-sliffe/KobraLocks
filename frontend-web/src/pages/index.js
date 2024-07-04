@@ -1,3 +1,5 @@
+//frontend-web/src/pages/index.js
+
 import React, { useState, useEffect } from 'react';
 
 function Typewriter({ text, averageSpeed, onTypingDone, startDelay = 0 }) {

@@ -13,7 +13,10 @@ import SignIn from './components/signin';
 import ForgotPassword from './components/ForgotPassword';
 import VerifyResetCode from './components/VerifyResetCode';
 import ResetPassword from './components/ResetPassword';
+import Dashboard from './components/Dashboard/dashboard'; // Import the Dashboard component
 import TempDashBoard from './pages/tempdashboard';
+import Account from './components/account';
+
 import './App.css';
 
 function App() {
@@ -39,6 +42,9 @@ function App() {
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/success" element={<Success />} />
                 <Route path="/tempdashboard" element={<TempDashBoard />} />
+                <Route path="/dashboard/*" element={<Dashboard />} /> 
+                <Route path="/account" element={<Account />} /> 
+
               </Routes>
             </div>
           </div>

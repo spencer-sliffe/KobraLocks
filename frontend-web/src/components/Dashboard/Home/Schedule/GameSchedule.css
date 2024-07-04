@@ -1,0 +1,105 @@
+.game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: calc(100vh - 60px); /* Adjust according to the header height */
+    overflow-y: auto;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.game-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.game-list {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.game-card {
+    background-color: #e0e0e0;
+    color:black;
+    padding: 5px;
+    padding-left: 45px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.schedule-info {
+    flex: 1;
+    text-align: left;
+}
+
+.odds-column-name {
+    flex: 1;
+    text-align: center;
+}
+
+.team-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.team-name-and-score {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+}
+
+.spread-column, .total-column, .money-column {
+    flex: 1;
+    text-align: center;
+    background-color: #d3d3d3;
+    padding: 3px;
+}
+
+.spread-column, .total-column {
+    margin-right: 5px;
+}
+
+.money-column {
+    font-weight: bold;
+}
+
+.odds {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.odds span:first-child {
+    font-weight: bold;
+}
+
+.total-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.total-indicator {
+    font-weight: bold;
+}
+
+.total-odds {
+    color: blue;
+}
+
+.live-info {
+    margin-top: 10px;
+    color: #ff4c4c;
+    font-weight: bold;
+    text-align: center;
+}

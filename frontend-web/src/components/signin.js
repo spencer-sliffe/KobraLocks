@@ -1,4 +1,5 @@
 // frontend-web/src/components/signin.js
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Ensure the path is correct based on your project structure
@@ -22,7 +23,7 @@ const SignIn = () => {
         try {
             const response = await apiSignIn(credentials.username, credentials.password);
             signIn(response.username); // Update authentication state
-            navigate('/tempdashboard'); // Navigate to another page upon successful login
+            navigate('/dashboard'); // Navigate to the dashboard upon successful login
         } catch (error) {
             setError(error.message || 'Invalid username or password');
         }

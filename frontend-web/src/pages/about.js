@@ -1,3 +1,5 @@
+//frontend-web/src/pages/about.js
+
 import React from "react";
 
 const About = () => {
