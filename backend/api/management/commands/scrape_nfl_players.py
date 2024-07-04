@@ -49,14 +49,14 @@ class Command(BaseCommand):
 
     def handle_player(self, player_link, header_link, link):
         teams = {
-            "BUF": "AFC_East", "MIA": "AFC_East", "NE": "AFC_East", "NYJ": "AFC_East",
-            "BAL": "AFC_North", "CIN": "AFC_North", "CLE": "AFC_North", "PIT": "AFC_North",
-            "HOU": "AFC_South", "IND": "AFC_South", "JAX": "AFC_South", "TEN": "AFC_South",
-            "DEN": "AFC_West", "KC": "AFC_West", "LV": "AFC_West", "LAC": "AFC_West",
-            "DAL": "NFC_East", "NYG": "NFC_East", "PHI": "NFC_East", "WAS": "NFC_East",
-            "CHI": "NFC_North", "DET": "NFC_North", "GB": "NFC_North", "MIN": "NFC_North",
-            "ATL": "NFC_South", "CAR": "NFC_South", "NO": "NFC_South", "TB": "NFC_South",
-            "ARI": "NFC_West", "LAR": "NFC_West", "SF": "NFC_West", "SEA": "NFC_West"
+            "Buffalo Bills": "BUF", "Miami Dolphins": "MIA", "New England Patriots": "NE", "New York Jets": "NYJ",
+            "Baltimore Ravens": "BAL", "Cincinnati Bengals": "CIN", "Cleveland Browns": "CLE", "Pittsburgh Steelers": "PIT",
+            "Houston Texans": "HOU", "Indianapolis Colts": "IND", "Jacksonville Jaguars": "JAX", "Tennesse Titans": "TEN",
+            "Denver Broncos": "DEN", "Kansas City Chiefs": "KC", "Las Vegas Raiders": "LV", "Oakland Raiders": "LV", "San Diego Chargers": "LAC", "Las Angeles Chargers": "LAC",
+            "Dallas Cowboys": "DAL", "New York Giants": "NYG", "Philadelphia Eagles": "PHI", "Washington Redskins": "WAS", "Washington Commanders": "WAS",
+            "Chicago Bears": "CHI", "Detroit Lions": "DET", "Greenbay Packers": "GB", "Minnesota Vikings": "MIN",
+            "Atlanta Falcons": "ATL", "Carolina Panthers": "CAR", "New Orleans Saints": "NO", "Tampa Bay Buccaneers": "TB",
+            "St Louis Rams": "LAR", "Arizona Cardinals": "ARI", "Las Angeles Rams": "LAR", "San Fransisco 49ers": "SF", "Seattle Seahawks": "SEA"
         }
 
         positions = {
