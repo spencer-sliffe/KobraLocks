@@ -87,6 +87,8 @@ class Game_Bet(models.Model):
     player_name = models.CharField(null=True, blank=True) 
     statistic = models.CharField(null=True, blank=True)               # outcome, home run, score
     statistic_value = models.CharField(null=True, blank=True)          # win/loss, +-2, +-7
+    spread_min = 
+    spread_max = 
     decimal_over = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
     decimal_under = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
     american_over = models.CharField(null=True, blank=True)    
@@ -108,7 +110,6 @@ class Season_Bet(models.Model):
     decimal_under = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
     american_over = models.CharField(null=True, blank=True)    
     american_under = models.CharField(null=True, blank=True) 
-
 
 # NFL
 

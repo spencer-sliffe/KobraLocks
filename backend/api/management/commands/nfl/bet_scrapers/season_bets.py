@@ -16,6 +16,17 @@ class Command(BaseCommand):
         # Setup logging
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
+        
+        future_keywords = {
+            
+        }
+        total_keywords = {
+
+        }
+        spread_keywords = {
+
+        }
+
 
         # Clear the existing NFL Specials in the database
         self.logger.info("Scraping Available NFL Bets")
@@ -77,49 +88,30 @@ class Command(BaseCommand):
         self.logger.info(f"handling bet sections")
         bet_description = bet_section.find('summary').find('h2', class_='text-style-m-medium flex-1').text.strip()
         rows_section = bet_section.find('div', class_='px-4 pb-4').find('div', class_='bg-card-primary-temp')
+        if any(keyword in bet_description for keyword in self.keywords):
+            self.logger.info(f"Bet description '{bet_description}' contains one of the keywords.")
+        else:
+            self.logger.info(f"Bet description '{bet_description}' does not contain any of the keywords.")
         rows = rows_section.find_all('div', class_='flex p-0')
         self.handle_bet_rows(rows, bet_description, league)
     
     def handle_bet_rows(self, rows, bet_description, league):
+        for row in rows
+    
+        
+    def handle_player_future(self, player_future):
+        # scrape future bets for players 
+    
+    def handle_future(self, future):
+        # scrape futures for games/teams
 
-    
-        
-    def handle_player_future(self, player_future)
-    
-    
-    def handle_future(self, future)
-    
-    def handle_total(self, total)
-        
-    def handle_spread(self, spread)
+    def handle_total(self, total):
+        # scrape totals
+
+    def handle_spread(self, spread):
+
 
     def handle_special(self, special):
-        try:
-            section = special.find('h2', class_='text-style-m-medium flex-1')
-            bet_title = section.text.strip()
-
-            for allteam in special.find_all('button', class_='relative rounded flex h-[48px] flex-1 flex-col items-center justify-center p-1.5 text-style-xs-medium button-bet-selector-deselected'):
-                team = allteam.find('span', class_='font-medium text-selector-label-deselected')
-                team_text = team.text.strip()
-                allteams.append(team_text)
-            for allbettitle in special.find_all('button', class_='flex w-full items-center justify-between pr-4 pt-2 text-left cursor-default'):
-                bet = allbettitle.find('div', class_='text-style-s-medium text-primary text-primary')
-                bet_title = bet.text.strip()
-                allbettitles.append(bet_title)
-            for allodd in special.find_all('button', class_='relative rounded flex h-[48px] flex-1 flex-col items-center justify-center p-1.5 text-style-xs-medium button-bet-selector-deselected'):
-                odd_detail = allodd.find('span', class_='font-bold')
-                odd = odd_detail.text.strip()
-                allodds.append(odd)
-
-           
-                LYID = 
-                bet_titles=json.dumps(allbettitles),  # Encode list as JSON string
-                team_titles=json.dumps(allteams),   # Encode list as JSON string
-                odds=json.dumps(allodds)    # Encode list as JSON string
-            )
-            self.logger.info(f"Special saved: {section_title}")
-        except Exception as e:
-            self.logger.error(f"Error processing special: {str(e)}")
         
     def create_available_bet(self, bet):
         Available_Bet.objects.create(bet)

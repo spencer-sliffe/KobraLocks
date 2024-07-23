@@ -19,7 +19,7 @@ class Command(BaseCommand):
         self.logger = logging.getLogger(__name__)
 
         # Clear the existing NFL Futures in the database
-        NFLFutures.objects.all().delete()
+        NFLFutures.objects.all().delete() 
         self.logger.info("Cleared the NFL Futures table in the database.")
 
         # Setup Selenium WebDriver
